@@ -73,8 +73,8 @@ function App() {
         </header>
       )}
       {isLoading && <Loading />}
-      {!isLoading && collectionId ? (
-        <SeriesList />
+      {!isLoading && seriesItems ? (
+        <SeriesList seriesItems={seriesItems} />
       ) : (
         <Initialize
           setIsLoading={setIsLoading}
