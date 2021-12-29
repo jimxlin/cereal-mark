@@ -28,7 +28,7 @@ function SeriesList({ seriesItems }: Props) {
     <div>
       <h1>Series List Component</h1>
       {sortedItems().map((item) => (
-        <SeriesView seriesItem={item} />
+        <SeriesView key={item.title} seriesItem={item} />
       ))}
     </div>
   );

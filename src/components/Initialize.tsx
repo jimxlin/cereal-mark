@@ -37,8 +37,8 @@ function Initialize({ setIsLoading, setError, invalidCollection }: Props) {
       <h1>Initialize Component</h1>
       <div>About CerealMark, etc...</div>
       {invalidCollection && <div>Not a valid URL.</div>}
-      <div style={{ cursor: "pointer" }} onClick={initialize}>
-        + Create a New List
+      <div>
+        <button onClick={initialize}>+ Create a New List</button>
       </div>
     </div>
   );

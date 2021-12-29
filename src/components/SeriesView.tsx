@@ -6,7 +6,7 @@ type Props = {
 
 function SeriesView({ seriesItem }: Props) {
   const { title, format } = seriesItem;
-  const lastSession = seriesItem.sessions[seriesItem.sessions.length - 1]
+  const lastSession = seriesItem.sessions[seriesItem.sessions.length - 1];
 
   return (
     <div>
