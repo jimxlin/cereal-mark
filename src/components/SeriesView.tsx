@@ -7,13 +7,25 @@ type Props = {
 function SeriesView({ seriesItem }: Props) {
   const { title, format } = seriesItem;
   const lastSession = seriesItem.sessions[seriesItem.sessions.length - 1];
+  const formatMap = {
+    [FORMAT.SHOW]: "Show",
+    [FORMAT.COMIC]: "Comic",
+    [FORMAT.SHOW]: "Show",
+  };
 
   return (
     <div>
-      <p>Series View Component</p>
+      <h2>Series View Component</h2>
       <p>{title}</p>
-      <p>{format}</p>
-      <p>{lastSession}</p>
+      <p>{formatMap[format]}</p>
+      {lastSession.saga && (
+        <p>
+          {format === FORMAT.SHOW ? "Season" : "Volume"}: {lastSession.saga}
+        </p>
+      )}
+      <p>
+        {format === FORMAT.SHOW ? "Episode" : "Chapter"}: {lastSession.act}
+      </p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
-import { FORMAT, Collection, SeriesItem, Session } from "./types";
+import { FORMAT, SeriesItem, Session } from "./types";
 import { getCollection, updateCollection } from "./api";
 import logo from "./logo.svg";
 import "./App.css";
@@ -74,19 +74,20 @@ function App() {
   const addSeries = (
     title: string,
     format: typeof FORMAT.COMIC | typeof FORMAT.SHOW | typeof FORMAT.BOOK,
-    hasSagas: boolean
+    act: number,
+    saga?: number
   ): void => {
     setUpdatedAtMs(Date.now());
-    const sessionZero = {
-      ...(hasSagas && { saga: 1 }),
-      act: 0,
+    const firstSession = {
+      saga,
+      act,
       createdAtMs: Date.now(),
     };
     setSeriesItems([
       ...(seriesItems || []),
       {
         title: title,
-        sessions: [sessionZero],
+        sessions: [firstSession],
         createdAtMs: Date.now(),
         updatedAtMs: Date.now(),
         archived: false,
