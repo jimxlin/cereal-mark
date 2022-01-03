@@ -24,9 +24,24 @@ function SeriesList({ seriesItems }: Props) {
     return sortReverse ? sorted.reverse() : sorted;
   };
 
+  const sortBy = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    const method = (e.target as HTMLButtonElement).name;
+    if (method === sortMethod) setSortReverse(!sortReverse);
+    setSortMethod(method);
+  };
+
   return (
     <div>
       <h1>Series List Component</h1>
+      <div>
+        Sort:
+        <button name={SORT.RECENCY} onClick={sortBy}>
+          Recency
+        </button>
+        <button name={SORT.TITLE} onClick={sortBy}>
+          Title
+        </button>
+      </div>
       {sortedItems().map((item) => (
         <SeriesView key={item.title} seriesItem={item} />
       ))}
