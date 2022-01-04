@@ -99,6 +99,7 @@ function App() {
 
   return (
     <div className="App">
+      {error && <h1 style={{ color: "#f00" }}>ERROR: {error}</h1>}
       {isLoading && (
         <header
           className="App-header"
