@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { SORT, SeriesItem } from "../types";
 import SeriesView from "./SeriesView";
+import AddSessionView from "./AddSessionView";
 
 type Props = {
   seriesItems: Array<SeriesItem>;
+  addSession: (seriesTitle: string, act: number, saga?: number) => void;
 };
 
-function SeriesList({ seriesItems }: Props) {
+function SeriesList({ seriesItems, addSession }: Props) {
   const [sortMethod, setSortMethod] = useState(SORT.RECENCY);
   const [sortReverse, setSortReverse] = useState(false);
+  const [seriesToUpdate, setSeriesToUpdate] = useState<SeriesItem | undefined>(
+    undefined
+  );
 
   const sortedItems = (): Array<SeriesItem> => {
     const sorted = [...seriesItems].sort((itemA, itemB) => {
@@ -30,9 +35,20 @@ function SeriesList({ seriesItems }: Props) {
     setSortMethod(method);
   };
 
+  const clearAddSessionForm = (): void => {
+    setSeriesToUpdate(undefined);
+  };
+
   return (
     <div>
       <h1>Series List Component</h1>
+      {seriesToUpdate && (
+        <AddSessionView
+          seriesItem={seriesToUpdate}
+          addSession={addSession}
+          clearAddSessionForm={clearAddSessionForm}
+        />
+      )}
       <div>
         Sort:
         <button name={SORT.RECENCY} onClick={sortBy}>
@@ -43,7 +59,11 @@ function SeriesList({ seriesItems }: Props) {
         </button>
       </div>
       {sortedItems().map((item) => (
-        <SeriesView key={item.title} seriesItem={item} />
+        <SeriesView
+          key={item.title}
+          seriesItem={item}
+          setSeriesToUpdate={setSeriesToUpdate}
+        />
       ))}
     </div>
   );

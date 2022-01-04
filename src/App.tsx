@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment, createContext } from "react";
-import { FORMAT, SeriesItem, Session } from "./types";
+import { FORMAT, Format, SeriesItem, Session } from "./types";
 import { getCollection, updateCollection } from "./api";
 import logo from "./logo.svg";
 import "./App.css";
@@ -66,7 +66,7 @@ function App() {
       seriesItems,
       updatedAtMs,
     });
-  }, [collectionName, seriesItems]);
+  }, [collectionId, collectionName, seriesItems, updatedAtMs]);
 
   const updateCollectionName = (name: string): void => {
     setUpdatedAtMs(Date.now());
@@ -75,16 +75,18 @@ function App() {
 
   const addSeries = (
     title: string,
-    format: typeof FORMAT.COMIC | typeof FORMAT.SHOW | typeof FORMAT.BOOK,
+    format: Format,
     act: number,
     saga?: number
   ): void => {
-    const existingTitle = seriesItems?.filter((item) => item.title === title);
-    if (existingTitle && existingTitle.length > 0) {
+    const existingSeries = seriesItems?.filter(
+      (item) => item.title === title
+    )[0];
+    if (existingSeries) {
       throw new Error("Cannot add series, title already exists");
     }
     setUpdatedAtMs(Date.now());
-    const firstSession = {
+    const firstSession: Session = {
       saga,
       act,
       createdAtMs: Date.now(),
@@ -101,6 +103,42 @@ function App() {
         tags: [],
       },
     ]);
+  };
+
+  const addSession = (
+    seriesTitle: string,
+    act: number,
+    saga?: number
+  ): void => {
+    const seriesItem = seriesItems?.filter(
+      (item) => item.title === seriesTitle
+    )[0];
+    if (!seriesItem) {
+      throw new Error("Cannot add session, series does not exist");
+    }
+    if (!seriesItem.sessions) {
+      throw new Error("Cannot add session, sessions array does not exist");
+    }
+    if (seriesItem.sessions.length === 0) {
+      throw new Error("Cannot add session, missing first session");
+    }
+    setUpdatedAtMs(Date.now());
+    const session: Session = {
+      saga,
+      act,
+      createdAtMs: Date.now(),
+    };
+    setSeriesItems(
+      seriesItems.map((item) => {
+        if (item.title === seriesTitle) {
+          return {
+            ...item,
+            sessions: [...item.sessions, session],
+          };
+        }
+        return item;
+      })
+    );
   };
 
   return (
@@ -134,7 +172,7 @@ function App() {
               collectionName={collectionName}
               updateCollectionName={updateCollectionName}
             />
-            <SeriesList seriesItems={seriesItems} />
+            <SeriesList seriesItems={seriesItems} addSession={addSession} />
           </Fragment>
         ) : (
           <Initialize

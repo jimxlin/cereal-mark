@@ -2,30 +2,31 @@ import { FORMAT, Session, SeriesItem } from "../types";
 
 type Props = {
   seriesItem: SeriesItem;
+  setSeriesToUpdate: (seriesItem: SeriesItem | undefined) => void;
 };
 
-function SeriesView({ seriesItem }: Props) {
+function SeriesView({ seriesItem, setSeriesToUpdate }: Props) {
   const { title, format } = seriesItem;
-  const lastSession = seriesItem.sessions[seriesItem.sessions.length - 1];
-  const formatMap = {
-    [FORMAT.SHOW]: "Show",
-    [FORMAT.COMIC]: "Comic",
-    [FORMAT.SHOW]: "Show",
-  };
+  const lastSession: Session =
+    seriesItem.sessions[seriesItem.sessions.length - 1];
+  const { saga, act } = lastSession;
+
+  const showSeriesUpdateForm = () => setSeriesToUpdate(seriesItem);
 
   return (
     <div>
       <h2>Series View Component</h2>
       <p>{title}</p>
-      <p>{formatMap[format]}</p>
-      {lastSession.saga && (
+      <p>{FORMAT[format].NAME}</p>
+      {saga && (
         <p>
-          {format === FORMAT.SHOW ? "Season" : "Volume"}: {lastSession.saga}
+          {FORMAT[format].SAGA}: {saga}
         </p>
       )}
       <p>
-        {format === FORMAT.SHOW ? "Episode" : "Chapter"}: {lastSession.act}
+        {FORMAT[format].ACT}: {act}
       </p>
+      <button onClick={showSeriesUpdateForm}>Edit</button>
     </div>
   );
 }

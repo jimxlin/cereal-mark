@@ -1,8 +1,22 @@
 export const FORMAT = {
-  COMIC: "comic_format",
-  SHOW: "show_format",
-  BOOK: "book_format",
+  COMIC: {
+    NAME: "Comic",
+    SAGA: "Volume",
+    ACT: "Chapter",
+  },
+  SHOW: {
+    NAME: "Show",
+    SAGA: "Season",
+    ACT: "Episode",
+  },
+  BOOK: {
+    NAME: "Book",
+    SAGA: "Volume",
+    ACT: "Chapter",
+  },
 };
+
+export type Format = "COMIC" | "SHOW" | "BOOK";
 
 export const SORT = {
   RECENCY: "recency_sort",
@@ -22,7 +36,7 @@ export interface SeriesItem {
   createdAtMs: number;
   updatedAtMs: number;
   archived: boolean;
-  format: typeof FORMAT.COMIC | typeof FORMAT.SHOW | typeof FORMAT.BOOK;
+  format: Format;
   tags: Array<string>;
 }
 

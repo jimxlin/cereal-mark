@@ -1,33 +1,33 @@
 import { useContext } from "react";
 import { SetErrorContext } from "../App";
-import { FORMAT, SeriesItem, Collection } from "../types";
+import { FORMAT, Format } from "../types";
 import { useInput } from "../hooks";
 
 type Props = {
-  setShowAddSeries: (show: boolean) => void;
+  clearAddSeriesForm: () => void;
   addSeries: (
     title: string,
-    format: typeof FORMAT.COMIC | typeof FORMAT.SHOW | typeof FORMAT.BOOK,
+    format: Format,
     act: number,
     saga?: number
   ) => void;
 };
 
-function AddSeriesView({ setShowAddSeries, addSeries }: Props) {
+function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
+  const setError = useContext(SetErrorContext);
   const [name, resetName, bindName] = useInput("");
-  const [format, resetFormat, bindFormat] = useInput(FORMAT.SHOW);
+  const [format, resetFormat, bindFormat] = useInput("SHOW");
   // workaround for https://github.com/facebook/react/issues/6222#issuecomment-194061477
   const [saga, resetSaga, bindSaga] = useInput("");
   const [act, resetAct, bindAct] = useInput(1);
-  const setError = useContext(SetErrorContext);
 
   const resetNewSeries = (): void => {
     setError(undefined);
+    clearAddSeriesForm();
     resetName();
     resetFormat();
     resetSaga();
     resetAct();
-    setShowAddSeries(false);
   };
 
   const saveSeries = (): void => {
@@ -41,6 +41,7 @@ function AddSeriesView({ setShowAddSeries, addSeries }: Props) {
 
   return (
     <div>
+      <h1>Add Seriew View Component</h1>
       <div>
         <label>Name</label>
         <input type="text" {...bindName} />
@@ -48,9 +49,9 @@ function AddSeriesView({ setShowAddSeries, addSeries }: Props) {
       <div>
         <label>Format</label>
         <select {...bindFormat}>
-          <option value={FORMAT.SHOW}>Show</option>
-          <option value={FORMAT.COMIC}>Comic</option>
-          <option value={FORMAT.BOOK}>Book</option>
+          <option value="SHOW">{FORMAT.SHOW.NAME}</option>
+          <option value="COMIC">{FORMAT.COMIC.NAME}</option>
+          <option value="BOOK">{FORMAT.BOOK.NAME}</option>
         </select>
       </div>
       <div>

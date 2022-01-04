@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FORMAT, SeriesItem, Collection } from "../types";
+import { FORMAT, Format } from "../types";
 import { useInput } from "../hooks";
 import AddSeriesView from "./AddSeriesView";
 
@@ -8,7 +8,7 @@ type Props = {
   updateCollectionName: (name: string) => void;
   addSeries: (
     title: string,
-    format: typeof FORMAT.COMIC | typeof FORMAT.SHOW | typeof FORMAT.BOOK,
+    format: Format,
     act: number,
     saga?: number
   ) => void;
@@ -35,6 +35,10 @@ function ManageCollection({
     setShowRename(false);
   };
 
+  const clearAddSeriesForm = (): void => {
+    setShowAddSeries(false);
+  };
+
   return (
     <div>
       <h1>Manage Collection Component</h1>
@@ -53,7 +57,7 @@ function ManageCollection({
       <br />
       {showAddSeries ? (
         <AddSeriesView
-          setShowAddSeries={setShowAddSeries}
+          clearAddSeriesForm={clearAddSeriesForm}
           addSeries={addSeries}
         />
       ) : (
