@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { SetErrorContext } from "../App";
 import { FORMAT, SeriesItem, Collection } from "../types";
 import { useInput } from "../hooks";
 
@@ -17,8 +19,10 @@ function AddSeriesView({ setShowAddSeries, addSeries }: Props) {
   // workaround for https://github.com/facebook/react/issues/6222#issuecomment-194061477
   const [saga, resetSaga, bindSaga] = useInput("");
   const [act, resetAct, bindAct] = useInput(1);
+  const setError = useContext(SetErrorContext);
 
   const resetNewSeries = (): void => {
+    setError(undefined);
     resetName();
     resetFormat();
     resetSaga();
@@ -27,8 +31,12 @@ function AddSeriesView({ setShowAddSeries, addSeries }: Props) {
   };
 
   const saveSeries = (): void => {
-    addSeries(name, format, act, saga.length === 0 ? undefined : saga);
-    resetNewSeries();
+    try {
+      addSeries(name, format, act, saga.length === 0 ? undefined : saga);
+      resetNewSeries();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : JSON.stringify(err));
+    }
   };
 
   return (

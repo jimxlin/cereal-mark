@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, createContext } from "react";
 import { FORMAT, SeriesItem, Session } from "./types";
 import { getCollection, updateCollection } from "./api";
 import logo from "./logo.svg";
@@ -7,6 +7,8 @@ import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Initialize from "./components/Initialize";
 import Loading from "./components/Loading";
+
+export const SetErrorContext = createContext<any>(null);
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -77,6 +79,10 @@ function App() {
     act: number,
     saga?: number
   ): void => {
+    const existingTitle = seriesItems?.filter((item) => item.title === title);
+    if (existingTitle && existingTitle.length > 0) {
+      throw new Error("Cannot add series, title already exists");
+    }
     setUpdatedAtMs(Date.now());
     const firstSession = {
       saga,
@@ -120,22 +126,23 @@ function App() {
         </header>
       )}
       {isLoading && <Loading />}
-      {!isLoading && seriesItems ? (
-        <Fragment>
-          <ManageCollection
-            addSeries={addSeries}
-            collectionName={collectionName}
-            updateCollectionName={updateCollectionName}
+      <SetErrorContext.Provider value={setError}>
+        {!isLoading && seriesItems ? (
+          <Fragment>
+            <ManageCollection
+              addSeries={addSeries}
+              collectionName={collectionName}
+              updateCollectionName={updateCollectionName}
+            />
+            <SeriesList seriesItems={seriesItems} />
+          </Fragment>
+        ) : (
+          <Initialize
+            setIsLoading={setIsLoading}
+            invalidCollection={invalidCollection}
           />
-          <SeriesList seriesItems={seriesItems} />
-        </Fragment>
-      ) : (
-        <Initialize
-          setIsLoading={setIsLoading}
-          setError={setError}
-          invalidCollection={invalidCollection}
-        />
-      )}
+        )}
+      </SetErrorContext.Provider>
     </div>
   );
 }

@@ -1,14 +1,16 @@
+import { useContext } from "react";
+import { xxhash3 } from "hash-wasm";
 import { createCollection } from "../api";
 import { Collection } from "../types";
-import { xxhash3 } from "hash-wasm";
+import { SetErrorContext } from "../App";
 
 type Props = {
   setIsLoading: (loading: boolean) => void;
-  setError: (msg: string | undefined) => void;
   invalidCollection: boolean;
 };
 
-function Initialize({ setIsLoading, setError, invalidCollection }: Props) {
+function Initialize({ setIsLoading, invalidCollection }: Props) {
+  const setError = useContext(SetErrorContext);
   const initialize = async (): Promise<void> => {
     setIsLoading(false);
     setError(undefined);
