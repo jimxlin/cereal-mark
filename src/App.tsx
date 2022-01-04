@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { Collection, SeriesItem } from "./types";
-import { getCollection } from "./api";
+import { useState, useEffect, Fragment } from "react";
+import { FORMAT, SeriesItem, Session } from "./types";
+import { getCollection, updateCollection } from "./api";
 import logo from "./logo.svg";
 import "./App.css";
-import Management from "./components/Management";
+import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Initialize from "./components/Initialize";
 import Loading from "./components/Loading";
@@ -14,6 +14,7 @@ function App() {
   const [collectionId, setCollectionId] = useState<string | undefined>(
     undefined
   );
+  const [updatedAtMs, setUpdatedAtMs] = useState<number | undefined>(undefined);
   const [collectionName, setCollectionName] = useState<string | undefined>(
     undefined
   );
@@ -22,7 +23,8 @@ function App() {
   );
   const [invalidCollection, setInvalidCollection] = useState(false);
 
-  useEffect(() => {
+  // initial load
+  useEffect((): void => {
     setError(undefined);
     const id = window.location.pathname.substring(1);
     if (id.length === 0) {
@@ -41,6 +43,7 @@ function App() {
         setCollectionId(collection?.id);
         setCollectionName(collection?.name);
         setSeriesItems(collection?.seriesItems);
+        setUpdatedAtMs(collection?.updatedAtMs);
         setIsLoading(false);
       } catch (err) {
         // TODO: generic error message in prod
@@ -50,6 +53,49 @@ function App() {
     };
     fetchData();
   }, []);
+
+  // save changes
+  useEffect((): void => {
+    // do not get triggered by initial load
+    if (!collectionId || !seriesItems || !updatedAtMs) return;
+    updateCollection({
+      id: collectionId,
+      name: collectionName,
+      seriesItems,
+      updatedAtMs,
+    });
+  }, [collectionName, seriesItems]);
+
+  const updateCollectionName = (name: string): void => {
+    setUpdatedAtMs(Date.now());
+    setCollectionName(name);
+  };
+
+  const addSeries = (
+    title: string,
+    format: typeof FORMAT.COMIC | typeof FORMAT.SHOW | typeof FORMAT.BOOK,
+    act: number,
+    saga?: number
+  ): void => {
+    setUpdatedAtMs(Date.now());
+    const firstSession = {
+      saga,
+      act,
+      createdAtMs: Date.now(),
+    };
+    setSeriesItems([
+      ...(seriesItems || []),
+      {
+        title: title,
+        sessions: [firstSession],
+        createdAtMs: Date.now(),
+        updatedAtMs: Date.now(),
+        archived: false,
+        format: format,
+        tags: [],
+      },
+    ]);
+  };
 
   return (
     <div className="App">
@@ -73,8 +119,15 @@ function App() {
         </header>
       )}
       {isLoading && <Loading />}
-      {!isLoading && collectionId ? (
-        <SeriesList />
+      {!isLoading && seriesItems ? (
+        <Fragment>
+          <ManageCollection
+            addSeries={addSeries}
+            collectionName={collectionName}
+            updateCollectionName={updateCollectionName}
+          />
+          <SeriesList seriesItems={seriesItems} />
+        </Fragment>
       ) : (
         <Initialize
           setIsLoading={setIsLoading}

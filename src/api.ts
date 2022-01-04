@@ -1,3 +1,4 @@
+// TODO: use localStorage, and save localStorage data to database api
 import { Collection } from "./types";
 
 export const createCollection = (
@@ -14,16 +15,15 @@ export const createCollection = (
   });
 
 export const updateCollection = (
-  collectionId: string,
   collection: Collection
 ): Promise<Collection | null> =>
   new Promise((resolve, reject) => {
-    const existingCollection = localStorage.getItem(collectionId);
+    const existingCollection = localStorage.getItem(collection.id);
     if (!existingCollection && typeof existingCollection !== "object") {
       reject(new Error("Collection does not exist"));
     }
-    localStorage.setItem(collectionId, JSON.stringify(collection));
-    resolve(JSON.parse(localStorage.getItem(collectionId) || "null"));
+    localStorage.setItem(collection.id, JSON.stringify(collection));
+    resolve(JSON.parse(localStorage.getItem(collection.id) || "null"));
   });
 
 export const getCollection = (

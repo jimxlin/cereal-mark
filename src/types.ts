@@ -1,8 +1,15 @@
-export const COMIC_FORMAT = "comicFormat";
-export const SHOW_FORMAT = "showFormat";
-export const BOOK_FORMAT = "bookFormat";
+export const FORMAT = {
+  COMIC: "comic_format",
+  SHOW: "show_format",
+  BOOK: "book_format",
+};
 
-export interface View {
+export const SORT = {
+  RECENCY: "recency_sort",
+  TITLE: "title_sort",
+};
+
+export interface Session {
   saga?: number; // aka season, volume
   act: number; // aka chapter, episode
   createdAtMs: number;
@@ -11,11 +18,11 @@ export interface View {
 
 export interface SeriesItem {
   title: string;
-  views: Array<View>;
+  sessions: Array<Session>;
   createdAtMs: number;
   updatedAtMs: number;
   archived: boolean;
-  format: typeof COMIC_FORMAT | typeof SHOW_FORMAT | typeof BOOK_FORMAT;
+  format: typeof FORMAT.COMIC | typeof FORMAT.SHOW | typeof FORMAT.BOOK;
   tags: Array<string>;
 }
 
