@@ -31,5 +31,5 @@ export const getCollection = (
 ): Promise<Collection | null> =>
   new Promise((resolve, reject) => {
     const existingCollection = localStorage.getItem(collectionId);
-    resolve(JSON.parse(localStorage.getItem(collectionId) || "null"));
+    resolve(JSON.parse(existingCollection || "null"));
   });
