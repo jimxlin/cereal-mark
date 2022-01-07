@@ -26,7 +26,7 @@ function SeriesView({ seriesItem, setSeriesToUpdate }: Props) {
       <p>
         {FORMAT[format].ACT}: {act}
       </p>
-      <button onClick={showSeriesUpdateForm}>Edit</button>
+      <button onClick={showSeriesUpdateForm}>Update</button>
     </div>
   );
 }

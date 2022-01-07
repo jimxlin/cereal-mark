@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment, createContext } from "react";
-import { FORMAT, Format, SeriesItem, Session } from "./types";
+import { Format, SeriesItem, Session } from "./types";
 import { getCollection, updateCollection } from "./api";
 import logo from "./logo.svg";
 import "./App.css";

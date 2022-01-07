@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SORT, SeriesItem } from "../types";
+import { Format, SORT, SeriesItem } from "../types";
 import SeriesView from "./SeriesView";
 import AddSessionView from "./AddSessionView";
 
@@ -9,14 +9,25 @@ type Props = {
 };
 
 function SeriesList({ seriesItems, addSession }: Props) {
+  const [filterMethod, setFilterMethod] = useState("Any");
   const [sortMethod, setSortMethod] = useState(SORT.RECENCY);
   const [sortReverse, setSortReverse] = useState(false);
   const [seriesToUpdate, setSeriesToUpdate] = useState<SeriesItem | undefined>(
     undefined
   );
 
-  const sortedItems = (): Array<SeriesItem> => {
-    const sorted = [...seriesItems].sort((itemA, itemB) => {
+  const filterItems = (items: Array<SeriesItem>): Array<SeriesItem> => {
+    if (filterMethod === "Any") return items;
+    return items.filter((item) => item.format === filterMethod);
+  };
+
+  const filterBy = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    const method = (e.target as HTMLButtonElement).name;
+    setFilterMethod(method);
+  };
+
+  const sortItems = (items: Array<SeriesItem>): Array<SeriesItem> => {
+    const sorted = items.sort((itemA, itemB) => {
       switch (sortMethod) {
         case SORT.RECENCY:
           return itemB.updatedAtMs - itemA.updatedAtMs;
@@ -35,9 +46,32 @@ function SeriesList({ seriesItems, addSession }: Props) {
     setSortMethod(method);
   };
 
+  const displayItems = (): Array<SeriesItem> => {
+    // filterItems() does not mutate input
+    return sortItems(filterItems(seriesItems));
+  };
+
   const clearAddSessionForm = (): void => {
     setSeriesToUpdate(undefined);
   };
+
+  const formatPresence = (format: string) => {
+    return seriesItems.some((item) => item.format === format);
+  };
+
+  const filterButtons = ["Any", "SHOW", "COMIC", "BOOK"].map((format) => {
+    if (format !== "Any" && !formatPresence(format)) return null;
+    return (
+      <button
+        key={format}
+        name={format}
+        onClick={filterBy}
+        style={{ fontSize: filterMethod === format ? "2rem" : "1rem" }}
+      >
+        {format}
+      </button>
+    );
+  });
 
   return (
     <div>
@@ -51,14 +85,26 @@ function SeriesList({ seriesItems, addSession }: Props) {
       )}
       <div>
         Sort:
-        <button name={SORT.RECENCY} onClick={sortBy}>
+        <button
+          name={SORT.RECENCY}
+          onClick={sortBy}
+          style={{ fontSize: sortMethod === SORT.RECENCY ? "2rem" : "1rem" }}
+        >
           Recency
         </button>
-        <button name={SORT.TITLE} onClick={sortBy}>
+        <button
+          name={SORT.TITLE}
+          onClick={sortBy}
+          style={{ fontSize: sortMethod === SORT.TITLE ? "2rem" : "1rem" }}
+        >
           Title
         </button>
+        {"\u00A0"}
+        {"\u00A0"}
+        Filter:
+        {filterButtons}
       </div>
-      {sortedItems().map((item) => (
+      {displayItems().map((item) => (
         <SeriesView
           key={item.title}
           seriesItem={item}
