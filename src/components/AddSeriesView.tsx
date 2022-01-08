@@ -32,7 +32,12 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
 
   const saveSeries = (): void => {
     try {
-      addSeries(name, format, act, saga.length === 0 ? undefined : saga);
+      addSeries(
+        name,
+        format,
+        Number(act),
+        saga.length === 0 ? undefined : Number(saga)
+      );
       resetNewSeries();
     } catch (err) {
       setError(err instanceof Error ? err.message : JSON.stringify(err));

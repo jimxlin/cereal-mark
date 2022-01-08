@@ -26,7 +26,7 @@ function AddSessionView({
   const saveSession = (): void => {
     if (newSaga === saga && newAct === act) return;
     try {
-      addSession(seriesItem.title, newAct, newSaga);
+      addSession(seriesItem.title, Number(newAct), Number(newSaga));
       resetNewSession();
     } catch (err) {
       setError(err instanceof Error ? err.message : JSON.stringify(err));
