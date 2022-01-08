@@ -6,10 +6,11 @@ import { SetErrorContext } from "../App";
 
 type Props = {
   setIsLoading: (loading: boolean) => void;
+  enterDemoMode: () => void;
   invalidCollection: boolean;
 };
 
-function Initialize({ setIsLoading, invalidCollection }: Props) {
+function Initialize({ setIsLoading, enterDemoMode, invalidCollection }: Props) {
   const setError = useContext(SetErrorContext);
   const initialize = async (): Promise<void> => {
     setIsLoading(false);
@@ -41,6 +42,9 @@ function Initialize({ setIsLoading, invalidCollection }: Props) {
       {invalidCollection && <div>Not a valid URL.</div>}
       <div>
         <button onClick={initialize}>+ Create a New List</button>
+      </div>
+      <div>
+        <button onClick={enterDemoMode}>Try the Demo</button>
       </div>
     </div>
   );

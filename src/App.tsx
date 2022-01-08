@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment, createContext } from "react";
-import { Format, SeriesItem, Session } from "./types";
+import { Format, Collection, SeriesItem, Session } from "./types";
 import { getCollection, updateCollection } from "./api";
+import demoData from "./demo-data";
 import logo from "./logo.svg";
 import "./App.css";
 import ManageCollection from "./components/ManageCollection";
@@ -13,6 +14,7 @@ export const SetErrorContext = createContext<any>(null);
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [demoMode, setDemoMode] = useState(false);
   const [collectionId, setCollectionId] = useState<string | undefined>(
     undefined
   );
@@ -25,8 +27,14 @@ function App() {
   );
   const [invalidCollection, setInvalidCollection] = useState(false);
 
-  // initial load
-  useEffect((): void => {
+  const hydrateCollection = (collection: Collection): void => {
+    setCollectionId(collection.id);
+    setCollectionName(collection.name);
+    setSeriesItems(collection.seriesItems);
+    setUpdatedAtMs(collection.updatedAtMs);
+  };
+
+  const initialLoad = (): void => {
     setError(undefined);
     const id = window.location.pathname.substring(1);
     if (id.length === 0) {
@@ -42,10 +50,7 @@ function App() {
           setIsLoading(false);
           return;
         }
-        setCollectionId(collection?.id);
-        setCollectionName(collection?.name);
-        setSeriesItems(collection?.seriesItems);
-        setUpdatedAtMs(collection?.updatedAtMs);
+        hydrateCollection(collection);
         setIsLoading(false);
       } catch (err) {
         // TODO: generic error message in prod
@@ -54,10 +59,11 @@ function App() {
       }
     };
     fetchData();
-  }, []);
+  };
+  useEffect(initialLoad, []);
 
-  // save changes
-  useEffect((): void => {
+  const saveChanges = (): void => {
+    if (demoMode) return;
     // do not get triggered by initial load
     if (!collectionId || !seriesItems || !updatedAtMs) return;
     updateCollection({
@@ -66,7 +72,18 @@ function App() {
       seriesItems,
       updatedAtMs,
     });
-  }, [collectionId, collectionName, seriesItems, updatedAtMs]);
+  };
+  useEffect(saveChanges, [
+    collectionId,
+    collectionName,
+    seriesItems,
+    updatedAtMs,
+  ]);
+
+  const enterDemoMode = (): void => {
+    setDemoMode(true);
+    hydrateCollection(demoData);
+  };
 
   const updateCollectionName = (name: string): void => {
     setUpdatedAtMs(Date.now());
@@ -143,6 +160,24 @@ function App() {
 
   return (
     <div className="App">
+      {demoMode && (
+        <div
+          style={{
+            backgroundColor: "#f00",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          DEMO MODE{" "}
+          <button
+            onClick={() => {
+              window.location.href = "/";
+            }}
+          >
+            exit
+          </button>
+        </div>
+      )}
       {error && <h1 style={{ color: "#f00" }}>ERROR: {error}</h1>}
       {isLoading && (
         <header
@@ -177,6 +212,7 @@ function App() {
         ) : (
           <Initialize
             setIsLoading={setIsLoading}
+            enterDemoMode={enterDemoMode}
             invalidCollection={invalidCollection}
           />
         )}
