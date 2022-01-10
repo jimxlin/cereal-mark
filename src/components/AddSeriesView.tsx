@@ -45,30 +45,40 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
   };
 
   return (
-    <div>
-      <h1>Add Seriew View Component</h1>
+    <div className="form-container">
+      <h2>Add New Series</h2>
       <div>
-        <label>Name</label>
-        <input type="text" {...bindName} />
+        <label>
+          Name
+          <input type="text" {...bindName} />
+        </label>
       </div>
       <div>
-        <label>Format</label>
-        <select {...bindFormat}>
-          <option value="SHOW">{FORMAT.SHOW.NAME}</option>
-          <option value="COMIC">{FORMAT.COMIC.NAME}</option>
-          <option value="BOOK">{FORMAT.BOOK.NAME}</option>
-        </select>
+        <label>
+          Format
+          <select {...bindFormat}>
+            <option value="SHOW">{FORMAT.SHOW.NAME}</option>
+            <option value="COMIC">{FORMAT.COMIC.NAME}</option>
+            <option value="BOOK">{FORMAT.BOOK.NAME}</option>
+          </select>
+        </label>
       </div>
       <div>
-        <label>{format === FORMAT.SHOW ? "Season" : "Volume"}</label>
-        <input type="number" min="1" {...bindSaga} />
+        <label>
+          {format === FORMAT.SHOW ? "Season" : "Volume"}
+          <input id="act" type="number" min="1" {...bindSaga} />
+        </label>
       </div>
       <div>
-        <label>{format === FORMAT.SHOW ? "Episode" : "Chapter"}</label>
-        <input type="number" min="1" {...bindAct} />
+        <label>
+          {format === FORMAT.SHOW ? "Episode" : "Chapter"}
+          <input type="number" min="1" {...bindAct} />
+        </label>
       </div>
-      <button onClick={saveSeries}>Add</button>
-      <button onClick={resetNewSeries}>Cancel</button>
+      <div>
+        <button onClick={saveSeries}>Add</button>
+        <button onClick={resetNewSeries}>Cancel</button>
+      </div>
     </div>
   );
 }

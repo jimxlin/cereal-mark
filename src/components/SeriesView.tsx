@@ -15,7 +15,6 @@ function SeriesView({ seriesItem, setSeriesToUpdate }: Props) {
 
   return (
     <div>
-      <h2>Series View Component</h2>
       <p>{title}</p>
       <p>{FORMAT[format].NAME}</p>
       {saga && (

@@ -75,7 +75,6 @@ function SeriesList({ seriesItems, addSession }: Props) {
 
   return (
     <div>
-      <h1>Series List Component</h1>
       {seriesToUpdate && (
         <AddSessionView
           seriesItem={seriesToUpdate}

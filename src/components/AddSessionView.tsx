@@ -41,31 +41,28 @@ function AddSessionView({
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        border: "0.5rem solid black",
-        borderRadius: "1rem",
-        backgroundColor: "#888",
-        top: "10rem",
-        left: "50vh",
-      }}
-    >
-      <h2>Update Series View Component</h2>
+    <div className="form-container">
+      <h2>Update Progress</h2>
       <p>{title}</p>
       <p>{FORMAT[format].NAME}</p>
       {saga && (
         <div>
-          <label>{FORMAT[format].SAGA}</label>
-          <input type="number" min="1" {...bindNewSaga} />
+          <label>
+            {FORMAT[format].SAGA}
+            <input type="number" min="1" {...bindNewSaga} />
+          </label>
         </div>
       )}
       <div>
-        <label>{FORMAT[format].ACT}</label>
-        <input type="number" min="1" {...bindNewAct} />
+        <label>
+          {FORMAT[format].ACT}
+          <input type="number" min="1" {...bindNewAct} />
+        </label>
       </div>
-      <button onClick={saveSession}>Save</button>
-      <button onClick={resetNewSession}>Cancel</button>
+      <div>
+        <button onClick={saveSession}>Save</button>
+        <button onClick={resetNewSession}>Cancel</button>
+      </div>
     </div>
   );
 }
