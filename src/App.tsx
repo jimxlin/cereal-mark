@@ -158,27 +158,27 @@ function App() {
     );
   };
 
+  const DemoStatus = () => (
+    <div className="demo-bar">
+      DEMO MODE{" "}
+      <button
+        onClick={() => {
+          window.location.href = "/";
+        }}
+      >
+        exit
+      </button>
+    </div>
+  );
+
   return (
     <div className="App">
-      {demoMode && (
-        <div
-          style={{
-            backgroundColor: "#f00",
-            width: "100%",
-            textAlign: "center",
-          }}
-        >
-          DEMO MODE{" "}
-          <button
-            onClick={() => {
-              window.location.href = "/";
-            }}
-          >
-            exit
-          </button>
-        </div>
+      {demoMode && <DemoStatus />}
+      {error && (
+        <h3 style={{ color: "#f00", position: "relative", zIndex: 10 }}>
+          ERROR: {error}
+        </h3>
       )}
-      {error && <h1 style={{ color: "#f00" }}>ERROR: {error}</h1>}
       {isLoading && <Loading />}
       <SetErrorContext.Provider value={setError}>
         {!isLoading && seriesItems ? (
