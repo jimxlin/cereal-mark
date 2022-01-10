@@ -31,6 +31,7 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
   };
 
   const saveSeries = (): void => {
+    if (name.length === 0) return;
     try {
       addSeries(
         name,
@@ -76,7 +77,9 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
         </label>
       </div>
       <div>
-        <button onClick={saveSeries}>Add</button>
+        <button onClick={saveSeries} disabled={name.length === 0}>
+          Add
+        </button>
         <button onClick={resetNewSeries}>Cancel</button>
       </div>
     </div>
