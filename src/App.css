@@ -66,3 +66,12 @@ button {
   margin: 0.5rem 1rem;
   min-width: 5rem;
 }
+
+.filters button {
+  margin: 0.5rem;
+}
+
+.inverse-btn {
+  background-color: #000;
+  color: #fff;
+}
