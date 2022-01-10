@@ -25,7 +25,6 @@ function App() {
   const [seriesItems, setSeriesItems] = useState<Array<SeriesItem> | undefined>(
     undefined
   );
-  const [invalidCollection, setInvalidCollection] = useState(false);
 
   const hydrateCollection = (collection: Collection): void => {
     setCollectionId(collection.id);
@@ -46,8 +45,7 @@ function App() {
       try {
         const collection = await getCollection(id);
         if (!collection) {
-          setInvalidCollection(true);
-          setIsLoading(false);
+          setError("Invalid URL");
           return;
         }
         hydrateCollection(collection);
@@ -194,7 +192,6 @@ function App() {
           <Initialize
             setIsLoading={setIsLoading}
             enterDemoMode={enterDemoMode}
-            invalidCollection={invalidCollection}
           />
         )}
       </SetErrorContext.Provider>

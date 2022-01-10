@@ -7,10 +7,9 @@ import { SetErrorContext } from "../App";
 type Props = {
   setIsLoading: (loading: boolean) => void;
   enterDemoMode: () => void;
-  invalidCollection: boolean;
 };
 
-function Initialize({ setIsLoading, enterDemoMode, invalidCollection }: Props) {
+function Initialize({ setIsLoading, enterDemoMode }: Props) {
   const setError = useContext(SetErrorContext);
   const initialize = async (): Promise<void> => {
     setIsLoading(false);
@@ -37,11 +36,13 @@ function Initialize({ setIsLoading, enterDemoMode, invalidCollection }: Props) {
 
   return (
     <div>
-      <h1>Initialize Component</h1>
-      <div>About CerealMark, etc...</div>
-      {invalidCollection && <div>Not a valid URL.</div>}
+      <h1>CerealMark</h1>
+      <p>
+        Keep track of series that you are following. Your data is backed up in
+        the cloud, just use your URL to access it.
+      </p>
       <div>
-        <button onClick={initialize}>+ Create a New List</button>
+        <button onClick={initialize}>Create a New List</button>
       </div>
       <div>
         <button onClick={enterDemoMode}>Try the Demo</button>
