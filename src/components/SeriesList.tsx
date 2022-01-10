@@ -2,14 +2,21 @@ import { useState } from "react";
 import { Format, SORT, SeriesItem } from "../types";
 import SeriesView from "./SeriesView";
 import AddSessionView from "./AddSessionView";
+import { reverse } from "dns";
+import { classicNameResolver } from "typescript";
 
 type Props = {
   seriesItems: Array<SeriesItem>;
-  addSession: (seriesTitle: string, act: number, saga?: number) => void;
+  addSession: (
+    seriesTitle: string,
+    act: number,
+    saga: number | undefined,
+    viewUrl: string | undefined
+  ) => void;
 };
 
 function SeriesList({ seriesItems, addSession }: Props) {
-  const [filterMethod, setFilterMethod] = useState("Any");
+  const [filterMethod, setFilterMethod] = useState("ANY");
   const [sortMethod, setSortMethod] = useState(SORT.RECENCY);
   const [sortReverse, setSortReverse] = useState(false);
   const [seriesToUpdate, setSeriesToUpdate] = useState<SeriesItem | undefined>(
@@ -17,7 +24,7 @@ function SeriesList({ seriesItems, addSession }: Props) {
   );
 
   const filterItems = (items: Array<SeriesItem>): Array<SeriesItem> => {
-    if (filterMethod === "Any") return items;
+    if (filterMethod === "ANY") return items;
     return items.filter((item) => item.format === filterMethod);
   };
 
@@ -59,23 +66,45 @@ function SeriesList({ seriesItems, addSession }: Props) {
     return seriesItems.some((item) => item.format === format);
   };
 
-  const filterButtons = ["Any", "SHOW", "COMIC", "BOOK"].map((format) => {
-    if (format !== "Any" && !formatPresence(format)) return null;
+  const sortButtons = [
+    { name: "Recency", value: SORT.RECENCY },
+    { name: "Title", value: SORT.TITLE },
+  ].map((method) => {
+    const selected = sortMethod === method.value;
     return (
       <button
-        key={format}
-        name={format}
-        onClick={filterBy}
-        style={{ fontSize: filterMethod === format ? "2rem" : "1rem" }}
+        key={method.value}
+        name={method.value}
+        onClick={sortBy}
+        {...(selected && { className: "inverse-btn" })}
       >
-        {format}
+        {method.name} {selected && (sortReverse ? "<" : ">")}
+      </button>
+    );
+  });
+
+  const filterButtons = [
+    { name: "Any", value: "ANY" },
+    { name: "Shows", value: "SHOW" },
+    { name: "Comics", value: "COMIC" },
+    { name: "Books", value: "BOOK" },
+  ].map((format) => {
+    if (format.value !== "ANY" && !formatPresence(format.value)) return null;
+    const selected = filterMethod === format.value;
+    return (
+      <button
+        key={format.value}
+        name={format.value}
+        onClick={filterBy}
+        {...(selected && { className: "inverse-btn" })}
+      >
+        {format.name}
       </button>
     );
   });
 
   return (
-    <div>
-      <h1>Series List Component</h1>
+    <div className="filters">
       {seriesToUpdate && (
         <AddSessionView
           seriesItem={seriesToUpdate}
@@ -85,25 +114,13 @@ function SeriesList({ seriesItems, addSession }: Props) {
       )}
       <div>
         Sort:
-        <button
-          name={SORT.RECENCY}
-          onClick={sortBy}
-          style={{ fontSize: sortMethod === SORT.RECENCY ? "2rem" : "1rem" }}
-        >
-          Recency
-        </button>
-        <button
-          name={SORT.TITLE}
-          onClick={sortBy}
-          style={{ fontSize: sortMethod === SORT.TITLE ? "2rem" : "1rem" }}
-        >
-          Title
-        </button>
-        {"\u00A0"}
-        {"\u00A0"}
+        {sortButtons}
+      </div>
+      <div>
         Filter:
         {filterButtons}
       </div>
+      <br />
       {displayItems().map((item) => (
         <SeriesView
           key={item.title}

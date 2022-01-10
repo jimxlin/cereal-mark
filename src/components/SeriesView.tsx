@@ -6,27 +6,34 @@ type Props = {
 };
 
 function SeriesView({ seriesItem, setSeriesToUpdate }: Props) {
-  const { title, format } = seriesItem;
+  const { title, format, updatedAtMs } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
-  const { saga, act } = lastSession;
+  const { saga, act, viewUrl } = lastSession;
 
   const showSeriesUpdateForm = () => setSeriesToUpdate(seriesItem);
 
   return (
-    <div>
-      <h2>Series View Component</h2>
-      <p>{title}</p>
-      <p>{FORMAT[format].NAME}</p>
-      {saga && (
-        <p>
-          {FORMAT[format].SAGA}: {saga}
-        </p>
-      )}
-      <p>
-        {FORMAT[format].ACT}: {act}
-      </p>
-      <button onClick={showSeriesUpdateForm}>Update</button>
+    <div className="series-row">
+      <div>
+        {title}{" "}
+        {viewUrl && (
+          <a href={viewUrl} target="_blank" rel="noreferrer noopener">
+            Link
+          </a>
+        )}
+      </div>
+      <div>
+        {saga && (
+          <span>
+            {FORMAT[format].SAGA} {saga} -{" "}
+          </span>
+        )}
+        {FORMAT[format].ACT} {act}
+      </div>
+      <div>
+        <button onClick={showSeriesUpdateForm}>Update</button>
+      </div>
     </div>
   );
 }

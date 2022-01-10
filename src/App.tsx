@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment, createContext } from "react";
 import { Format, Collection, SeriesItem, Session } from "./types";
 import { getCollection, updateCollection } from "./api";
+import { validUrl } from "./helpers";
 import demoData from "./demo-data";
 import logo from "./logo.svg";
 import "./App.css";
@@ -25,7 +26,6 @@ function App() {
   const [seriesItems, setSeriesItems] = useState<Array<SeriesItem> | undefined>(
     undefined
   );
-  const [invalidCollection, setInvalidCollection] = useState(false);
 
   const hydrateCollection = (collection: Collection): void => {
     setCollectionId(collection.id);
@@ -46,8 +46,7 @@ function App() {
       try {
         const collection = await getCollection(id);
         if (!collection) {
-          setInvalidCollection(true);
-          setIsLoading(false);
+          setError("Invalid URL");
           return;
         }
         hydrateCollection(collection);
@@ -94,7 +93,8 @@ function App() {
     title: string,
     format: Format,
     act: number,
-    saga?: number
+    saga: number | undefined,
+    viewUrl: string | undefined
   ): void => {
     const existingSeries = seriesItems?.filter(
       (item) => item.title === title
@@ -102,10 +102,14 @@ function App() {
     if (existingSeries) {
       throw new Error("Cannot add series, title already exists");
     }
+    if (viewUrl && !validUrl(viewUrl)) {
+      throw new Error("Cannot add session, URL is invalid");
+    }
     setUpdatedAtMs(Date.now());
     const firstSession: Session = {
       saga,
       act,
+      viewUrl,
       createdAtMs: Date.now(),
     };
     setSeriesItems([
@@ -125,7 +129,8 @@ function App() {
   const addSession = (
     seriesTitle: string,
     act: number,
-    saga?: number
+    saga: number | undefined,
+    viewUrl: string | undefined
   ): void => {
     const seriesItem = seriesItems?.filter(
       (item) => item.title === seriesTitle
@@ -139,10 +144,14 @@ function App() {
     if (seriesItem.sessions.length === 0) {
       throw new Error("Cannot add session, missing first session");
     }
+    if (viewUrl && !validUrl(viewUrl)) {
+      throw new Error("Cannot add session, URL is invalid");
+    }
     setUpdatedAtMs(Date.now());
     const session: Session = {
       saga,
       act,
+      viewUrl,
       createdAtMs: Date.now(),
     };
     setSeriesItems(
@@ -158,45 +167,26 @@ function App() {
     );
   };
 
+  const DemoStatus = () => (
+    <div className="demo-bar">
+      DEMO MODE{" "}
+      <button
+        onClick={() => {
+          window.location.href = "/";
+        }}
+      >
+        exit
+      </button>
+    </div>
+  );
+
   return (
     <div className="App">
-      {demoMode && (
-        <div
-          style={{
-            backgroundColor: "#f00",
-            width: "100%",
-            textAlign: "center",
-          }}
-        >
-          DEMO MODE{" "}
-          <button
-            onClick={() => {
-              window.location.href = "/";
-            }}
-          >
-            exit
-          </button>
-        </div>
-      )}
-      {error && <h1 style={{ color: "#f00" }}>ERROR: {error}</h1>}
-      {isLoading && (
-        <header
-          className="App-header"
-          style={{ display: isLoading ? "flex" : "none" }}
-        >
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      {demoMode && <DemoStatus />}
+      {error && (
+        <h3 style={{ color: "#f00", position: "relative", zIndex: 10 }}>
+          ERROR: {error}
+        </h3>
       )}
       {isLoading && <Loading />}
       <SetErrorContext.Provider value={setError}>
@@ -213,7 +203,6 @@ function App() {
           <Initialize
             setIsLoading={setIsLoading}
             enterDemoMode={enterDemoMode}
-            invalidCollection={invalidCollection}
           />
         )}
       </SetErrorContext.Provider>

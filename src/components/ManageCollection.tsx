@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FORMAT, Format } from "../types";
+import { Format } from "../types";
 import { useInput } from "../hooks";
 import AddSeriesView from "./AddSeriesView";
 
@@ -10,7 +10,8 @@ type Props = {
     title: string,
     format: Format,
     act: number,
-    saga?: number
+    saga: number | undefined,
+    viewUrl: string | undefined
   ) => void;
 };
 
@@ -41,35 +42,39 @@ function ManageCollection({
 
   return (
     <div>
-      <h1>Manage Collection Component</h1>
-      {showRename ? (
-        <div>
-          <input type="text" {...newNameBind} />
-          <button onClick={saveName}>Save</button>
-          <button onClick={resetNewName}>Cancel</button>
-        </div>
-      ) : (
-        <div>
-          {collectionName || "New Collection"}
-          <button onClick={() => setShowRename(true)}>Rename</button>
+      {showRename && (
+        <div className="form-container">
+          <h2>Rename Collection</h2>
+          <div>
+            <label>
+              Collection Name
+              <input type="text" {...newNameBind} />
+            </label>
+          </div>
+          <div>
+            <button onClick={saveName}>Save</button>
+            <button onClick={resetNewName}>Cancel</button>
+          </div>
         </div>
       )}
-      <br />
-      {showAddSeries ? (
+      {showAddSeries && (
         <AddSeriesView
           clearAddSeriesForm={clearAddSeriesForm}
           addSeries={addSeries}
         />
-      ) : (
-        <div>
-          <button
-            style={{ cursor: "pointer" }}
-            onClick={() => setShowAddSeries(true)}
-          >
-            Add Series
-          </button>
-        </div>
       )}
+      <div>
+        <h2>{collectionName || "Unnamed Collection"}</h2>
+        <button onClick={() => setShowRename(true)}>Rename Collection</button>
+      </div>
+      <div>
+        <button
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowAddSeries(true)}
+        >
+          Add Series
+        </button>
+      </div>
     </div>
   );
 }
