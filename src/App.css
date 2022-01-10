@@ -30,6 +30,7 @@ button {
   font-size: 1rem;
   margin: 0.5rem 1rem;
   min-width: 5rem;
+  padding: 0.3rem;
 }
 
 .filters button {
@@ -39,4 +40,8 @@ button {
 .inverse-btn {
   background-color: #000;
   color: #fff;
+}
+
+.series-row {
+  margin-bottom: 1rem;
 }

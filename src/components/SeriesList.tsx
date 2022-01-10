@@ -114,6 +114,7 @@ function SeriesList({ seriesItems, addSession }: Props) {
         Filter:
         {filterButtons}
       </div>
+      <br />
       {displayItems().map((item) => (
         <SeriesView
           key={item.title}
