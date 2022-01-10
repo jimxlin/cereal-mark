@@ -1,5 +1,11 @@
 import { useContext } from "react";
-import { FORMAT, Session, SeriesItem } from "../types";
+import {
+  FORMAT,
+  DATE_LOCALE,
+  DATE_OPTIONS,
+  Session,
+  SeriesItem,
+} from "../types";
 import { SetErrorContext } from "../App";
 import { useInput } from "../hooks";
 
@@ -15,7 +21,7 @@ function AddSessionView({
   clearAddSessionForm,
 }: Props) {
   const setError = useContext(SetErrorContext);
-  const { title, format } = seriesItem;
+  const { title, format, updatedAtMs } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
   const { saga, act } = lastSession;
@@ -43,8 +49,13 @@ function AddSessionView({
   return (
     <div className="form-container">
       <h2>Update Progress</h2>
-      <p>{title}</p>
-      <p>{FORMAT[format].NAME}</p>
+      <h3>{title}</h3>
+      <div>
+        <i>
+          Last viewed on{" "}
+          {new Date(updatedAtMs).toLocaleString(DATE_LOCALE, DATE_OPTIONS)}
+        </i>
+      </div>
       {saga && (
         <div>
           <label>

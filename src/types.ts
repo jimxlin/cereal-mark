@@ -16,12 +16,20 @@ export const FORMAT = {
   },
 };
 
-export type Format = "COMIC" | "SHOW" | "BOOK";
+export const DATE_LOCALE = "en-US";
+
+export const DATE_OPTIONS: any = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
 
 export const SORT = {
   RECENCY: "recency_sort",
   TITLE: "title_sort",
 };
+
+export type Format = "COMIC" | "SHOW" | "BOOK";
 
 export interface Session {
   saga?: number; // aka season, volume
