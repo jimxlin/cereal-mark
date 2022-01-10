@@ -29,10 +29,16 @@ function AddSessionView({
   const [newSaga, resetNewSaga, bindNewSaga] = useInput(saga);
   const [newAct, resetNewAct, bindNewAct] = useInput(act);
 
+  const noChange: boolean = newSaga === saga && newAct === act;
+
   const saveSession = (): void => {
-    if (newSaga === saga && newAct === act) return;
+    if (noChange) return;
     try {
-      addSession(seriesItem.title, Number(newAct), Number(newSaga));
+      addSession(
+        seriesItem.title,
+        Number(newAct),
+        newSaga === undefined ? newSaga : Number(newSaga)
+      );
       resetNewSession();
     } catch (err) {
       setError(err instanceof Error ? err.message : JSON.stringify(err));
@@ -71,7 +77,9 @@ function AddSessionView({
         </label>
       </div>
       <div>
-        <button onClick={saveSession}>Save</button>
+        <button onClick={saveSession} disabled={noChange}>
+          Save
+        </button>
         <button onClick={resetNewSession}>Cancel</button>
       </div>
     </div>
