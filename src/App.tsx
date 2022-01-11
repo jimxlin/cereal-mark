@@ -1,9 +1,8 @@
 import { useState, useEffect, Fragment, createContext } from "react";
 import { Format, Collection, SeriesItem, Session } from "./types";
-import { getCollection, updateCollection } from "./api";
+import { getCollection, backupCollection } from "./api";
 import { validUrl } from "./helpers";
 import demoData from "./demo-data";
-import logo from "./logo.svg";
 import "./App.css";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
@@ -44,11 +43,13 @@ function App() {
     // https://www.robinwieruch.de/react-hooks-fetch-data/
     const fetchData = async () => {
       try {
-        const collection = await getCollection(id);
+        const response = await getCollection(id);
+        const collection = response.Item as Collection;
         if (!collection) {
           setError("Invalid URL");
           return;
         }
+
         hydrateCollection(collection);
         setIsLoading(false);
       } catch (err) {
@@ -65,7 +66,7 @@ function App() {
     if (demoMode) return;
     // do not get triggered by initial load
     if (!collectionId || !seriesItems || !updatedAtMs) return;
-    updateCollection({
+    backupCollection({
       id: collectionId,
       name: collectionName,
       seriesItems,

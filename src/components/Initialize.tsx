@@ -26,10 +26,18 @@ function Initialize({ setIsLoading, enterDemoMode }: Props) {
     };
     try {
       setIsLoading(true);
-      await createCollection(collectionId, collection);
+      await createCollection(collection);
       window.location.pathname = collectionId;
     } catch (err) {
-      setError(err instanceof Error ? err.message : JSON.stringify(err));
+      // very small chance of hash collision
+      if (
+        err instanceof Error &&
+        err.name === "ConditionalCheckFailedException"
+      ) {
+        setError("Please try again.");
+      } else {
+        setError(err instanceof Error ? err.message : JSON.stringify(err));
+      }
       setIsLoading(false);
     }
   };

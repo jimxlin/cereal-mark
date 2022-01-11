@@ -1,3 +1,5 @@
+export const TABLE_NAME = "CerealMark";
+
 export const FORMAT = {
   COMIC: {
     NAME: "Comic",
