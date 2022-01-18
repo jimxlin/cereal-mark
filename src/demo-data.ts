@@ -1,6 +1,6 @@
 import { Format } from "./types";
 
-export default {
+const demoData = {
   id: "123456789abcdef",
   name: "Demo Collection",
   updatedAtMs: 1641101376267,
@@ -320,3 +320,5 @@ export default {
     },
   ],
 };
+
+export default demoData;

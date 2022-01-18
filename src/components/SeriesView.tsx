@@ -1,4 +1,5 @@
-import { FORMAT, Session, SeriesItem } from "../types";
+import { Session, SeriesItem } from "../types";
+import { FORMAT } from "../constants";
 
 type Props = {
   seriesItem: SeriesItem;

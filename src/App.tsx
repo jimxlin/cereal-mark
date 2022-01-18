@@ -1,11 +1,6 @@
 import { useState, useEffect, useMemo, Fragment, createContext } from "react";
-import {
-  SAVE_INTERVAL,
-  Format,
-  Collection,
-  SeriesItem,
-  Session,
-} from "./types";
+import { Format, Collection, SeriesItem, Session } from "./types";
+import { SAVE_INTERVAL } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
 import { validUrl } from "./helpers";

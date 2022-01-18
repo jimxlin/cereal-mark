@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { SetErrorContext } from "../App";
-import { FORMAT, Format } from "../types";
+import { Format } from "../types";
+import { FORMAT } from "../constants";
 import { useInput } from "../hooks";
 
 type Props = {
@@ -23,6 +24,7 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
   const [act, resetAct, bindAct] = useInput(1);
   const [newViewUrl, resetViewUrl, bindViewUrl] = useInput("");
 
+  // TODO: necessary to reset values? this component gets unmounted on save/cancel
   const resetNewSeries = (): void => {
     setError(undefined);
     clearAddSeriesForm();

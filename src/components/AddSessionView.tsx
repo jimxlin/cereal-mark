@@ -1,11 +1,6 @@
 import { useContext } from "react";
-import {
-  FORMAT,
-  DATE_LOCALE,
-  DATE_OPTIONS,
-  Session,
-  SeriesItem,
-} from "../types";
+import { Session, SeriesItem } from "../types";
+import { FORMAT, DATE_LOCALE, DATE_OPTIONS } from "../constants";
 import { SetErrorContext } from "../App";
 import { useInput } from "../hooks";
 
@@ -55,6 +50,7 @@ function AddSessionView({
     }
   };
 
+  // TODO: necessary to reset values? this component gets unmounted on save/cancel
   const resetNewSession = (): void => {
     setError(undefined);
     clearAddSessionForm();

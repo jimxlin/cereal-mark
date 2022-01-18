@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useInput } from "../hooks";
 
 type Props = {
@@ -13,8 +12,6 @@ function RenameCollectionView({
   resetNewName,
 }: Props) {
   const [newName, newNameReset, newNameBind] = useInput(collectionName || "");
-
-  useEffect(() => newNameReset(), []);
 
   return (
     <div className="form-container">
