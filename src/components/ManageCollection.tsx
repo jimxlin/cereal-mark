@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Format } from "../types";
 import { useInput } from "../hooks";
 import AddSeriesView from "./AddSeriesView";
+import CollectionNameForm from "./RenameCollectionView";
 
 type Props = {
   collectionName: string | undefined;
@@ -43,19 +44,11 @@ function ManageCollection({
   return (
     <div>
       {showRename && (
-        <div className="form-container">
-          <h2>Rename Collection</h2>
-          <div>
-            <label>
-              Collection Name
-              <input autoFocus type="text" {...newNameBind} />
-            </label>
-          </div>
-          <div>
-            <button onClick={saveName}>Save</button>
-            <button onClick={resetNewName}>Cancel</button>
-          </div>
-        </div>
+        <CollectionNameForm
+          collectionName={collectionName}
+          saveName={saveName}
+          resetNewName={resetNewName}
+        />
       )}
       {showAddSeries && (
         <AddSeriesView
