@@ -22,7 +22,7 @@ const ddbClient = new DynamoDBClient({
 });
 const marshallOptions = {
   convertEmptyValues: false,
-  removeUndefinedValues: false,
+  removeUndefinedValues: true,
   convertClassInstanceToMap: false,
 };
 const unmarshallOptions = {
@@ -55,7 +55,7 @@ export const createCollection = (
   );
 };
 
-export const updateCollectionDdb = (
+export const updateCollection = (
   collection: Collection
 ): Promise<PutCommandOutput> => {
   return ddbDocClient.send(

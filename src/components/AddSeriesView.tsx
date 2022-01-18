@@ -55,7 +55,7 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
       <div>
         <label>
           Name
-          <input type="text" {...bindName} />
+          <input autoFocus type="text" {...bindName} />
         </label>
       </div>
       <div>
@@ -70,13 +70,13 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
       </div>
       <div>
         <label>
-          {format === FORMAT.SHOW ? "Season" : "Volume"}
+          {FORMAT[format as Format].SAGA}
           <input id="act" type="number" min="1" {...bindSaga} />
         </label>
       </div>
       <div>
         <label>
-          {format === FORMAT.SHOW ? "Episode" : "Chapter"}
+          {FORMAT[format as Format].ACT}
           <input type="number" min="1" {...bindAct} />
         </label>
       </div>

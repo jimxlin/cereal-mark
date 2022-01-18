@@ -48,7 +48,7 @@ function ManageCollection({
           <div>
             <label>
               Collection Name
-              <input type="text" {...newNameBind} />
+              <input autoFocus type="text" {...newNameBind} />
             </label>
           </div>
           <div>

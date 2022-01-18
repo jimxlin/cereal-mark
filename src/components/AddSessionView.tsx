@@ -33,7 +33,7 @@ function AddSessionView({
 
   const [newSaga, resetNewSaga, bindNewSaga] = useInput(saga);
   const [newAct, resetNewAct, bindNewAct] = useInput(act);
-  const [newViewUrl, resetViewUrl, bindViewUrl] = useInput(viewUrl);
+  const [newViewUrl, resetViewUrl, bindViewUrl] = useInput(viewUrl || "");
 
   const noChange: boolean =
     newSaga === saga && newAct === act && viewUrl === newViewUrl;
@@ -84,7 +84,7 @@ function AddSessionView({
       <div>
         <label>
           {FORMAT[format].ACT}
-          <input type="number" min="1" {...bindNewAct} />
+          <input autoFocus type="number" min="1" {...bindNewAct} />
         </label>
       </div>
       <div>
