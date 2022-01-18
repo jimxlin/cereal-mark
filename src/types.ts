@@ -1,3 +1,7 @@
+export const TABLE_NAME = "CerealMark";
+
+export const SAVE_INTERVAL = 5000;
+
 export const FORMAT = {
   COMIC: {
     NAME: "Comic",

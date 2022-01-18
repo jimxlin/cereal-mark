@@ -6,7 +6,7 @@ type Props = {
 };
 
 function SeriesView({ seriesItem, setSeriesToUpdate }: Props) {
-  const { title, format, updatedAtMs } = seriesItem;
+  const { title, format } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
   const { saga, act, viewUrl } = lastSession;

@@ -1,5 +1,9 @@
 function Loading() {
-  return <h1>Loading Component</h1>;
+  return (
+    <div style={{ width: "100vw", textAlign: "center", marginTop: "5rem" }}>
+      <img src="/spinner.gif" alt="Loading spinner" />
+    </div>
+  );
 }
 
 export default Loading;

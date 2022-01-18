@@ -1,9 +1,15 @@
-import { useState, useEffect, Fragment, createContext } from "react";
-import { Format, Collection, SeriesItem, Session } from "./types";
-import { getCollection, updateCollection } from "./api";
+import { useState, useEffect, useMemo, Fragment, createContext } from "react";
+import {
+  SAVE_INTERVAL,
+  Format,
+  Collection,
+  SeriesItem,
+  Session,
+} from "./types";
+import { getCollection, updateCollection, backupCollection } from "./api";
+import { useInterval } from "./hooks";
 import { validUrl } from "./helpers";
 import demoData from "./demo-data";
-import logo from "./logo.svg";
 import "./App.css";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
@@ -20,11 +26,25 @@ function App() {
     undefined
   );
   const [updatedAtMs, setUpdatedAtMs] = useState<number | undefined>(undefined);
+  const [savedAtMs, setSavedAtMs] = useState<number>(Date.now());
   const [collectionName, setCollectionName] = useState<string | undefined>(
     undefined
   );
   const [seriesItems, setSeriesItems] = useState<Array<SeriesItem> | undefined>(
     undefined
+  );
+
+  const collection = useMemo(
+    () =>
+      !collectionId || !seriesItems || !updatedAtMs
+        ? null
+        : {
+            id: collectionId,
+            name: collectionName,
+            seriesItems,
+            updatedAtMs,
+          },
+    [collectionId, collectionName, seriesItems, updatedAtMs]
   );
 
   const hydrateCollection = (collection: Collection): void => {
@@ -44,7 +64,8 @@ function App() {
     // https://www.robinwieruch.de/react-hooks-fetch-data/
     const fetchData = async () => {
       try {
-        const collection = await getCollection(id);
+        const response = await getCollection(id);
+        const collection = response.Item as Collection;
         if (!collection) {
           setError("Invalid URL");
           return;
@@ -61,23 +82,20 @@ function App() {
   };
   useEffect(initialLoad, []);
 
-  const saveChanges = (): void => {
-    if (demoMode) return;
-    // do not get triggered by initial load
-    if (!collectionId || !seriesItems || !updatedAtMs) return;
-    updateCollection({
-      id: collectionId,
-      name: collectionName,
-      seriesItems,
-      updatedAtMs,
-    });
+  const backupChanges = (): void => {
+    if (demoMode || !collection) return;
+    backupCollection(collection);
   };
-  useEffect(saveChanges, [
-    collectionId,
-    collectionName,
-    seriesItems,
-    updatedAtMs,
-  ]);
+  useEffect(backupChanges, [demoMode, collection, updatedAtMs]);
+
+  const saveChanges = (): void => {
+    if (!updatedAtMs || updatedAtMs < savedAtMs) return;
+    if (!collection) return;
+    updateCollection(collection)
+      .then(() => setSavedAtMs(Date.now()))
+      .catch(() => setError("Could not save changes."));
+  };
+  useInterval(saveChanges, SAVE_INTERVAL);
 
   const enterDemoMode = (): void => {
     setDemoMode(true);
