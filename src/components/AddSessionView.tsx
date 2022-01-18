@@ -26,9 +26,9 @@ function AddSessionView({
     seriesItem.sessions[seriesItem.sessions.length - 1];
   const { saga, act, viewUrl } = lastSession;
 
-  const [newSaga, resetNewSaga, bindNewSaga] = useInput(saga);
-  const [newAct, resetNewAct, bindNewAct] = useInput(act);
-  const [newViewUrl, resetViewUrl, bindViewUrl] = useInput(viewUrl || "");
+  const [newSaga, bindNewSaga] = useInput(saga);
+  const [newAct, bindNewAct] = useInput(act);
+  const [newViewUrl, bindViewUrl] = useInput(viewUrl || "");
 
   const noChange: boolean =
     newSaga === saga && newAct === act && viewUrl === newViewUrl;
@@ -50,13 +50,9 @@ function AddSessionView({
     }
   };
 
-  // TODO: necessary to reset values? this component gets unmounted on save/cancel
   const resetNewSession = (): void => {
     setError(undefined);
     clearAddSessionForm();
-    resetNewSaga();
-    resetNewAct();
-    resetViewUrl();
   };
 
   return (

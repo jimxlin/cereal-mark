@@ -17,22 +17,16 @@ type Props = {
 
 function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
   const setError = useContext(SetErrorContext);
-  const [name, resetName, bindName] = useInput("");
-  const [format, resetFormat, bindFormat] = useInput("SHOW");
-  // workaround for https://github.com/facebook/react/issues/6222#issuecomment-194061477
-  const [saga, resetSaga, bindSaga] = useInput("");
-  const [act, resetAct, bindAct] = useInput(1);
-  const [newViewUrl, resetViewUrl, bindViewUrl] = useInput("");
+  const [name, bindName] = useInput("");
+  const [format, bindFormat] = useInput("SHOW");
+  // empty string workaround for https://github.com/facebook/react/issues/6222#issuecomment-194061477
+  const [saga, bindSaga] = useInput("");
+  const [act, bindAct] = useInput(1);
+  const [newViewUrl, bindViewUrl] = useInput("");
 
-  // TODO: necessary to reset values? this component gets unmounted on save/cancel
   const resetNewSeries = (): void => {
     setError(undefined);
     clearAddSeriesForm();
-    resetName();
-    resetFormat();
-    resetSaga();
-    resetAct();
-    resetViewUrl();
   };
 
   const saveSeries = (): void => {

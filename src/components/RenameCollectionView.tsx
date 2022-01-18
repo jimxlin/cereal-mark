@@ -11,7 +11,7 @@ function RenameCollectionView({
   saveName,
   resetNewName,
 }: Props) {
-  const [newName, newNameReset, newNameBind] = useInput(collectionName || "");
+  const [newName, newNameBind] = useInput(collectionName || "");
 
   return (
     <div className="form-container">
