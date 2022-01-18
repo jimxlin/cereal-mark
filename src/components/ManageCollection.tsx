@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Format } from "../types";
-import { useInput } from "../hooks";
 import AddSeriesView from "./AddSeriesView";
 import CollectionNameForm from "./RenameCollectionView";
 
@@ -22,17 +21,13 @@ function ManageCollection({
   updateCollectionName,
 }: Props) {
   const [showRename, setShowRename] = useState(false);
-  const [newName, newNameReset, newNameBind] = useInput(collectionName || "");
   const [showAddSeries, setShowAddSeries] = useState(false);
 
-  useEffect(() => newNameReset(), [collectionName]);
-
   const resetNewName = (): void => {
-    newNameReset();
     setShowRename(false);
   };
 
-  const saveName = (): void => {
+  const saveName = (newName: string): void => {
     updateCollectionName(newName);
     setShowRename(false);
   };
