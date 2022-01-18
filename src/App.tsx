@@ -14,7 +14,8 @@ import "./App.css";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Initialize from "./components/Initialize";
-import Loading from "./components/Loading";
+import ErrorView from "./components/ErrorView";
+import LoadingView from "./components/LoadingView";
 
 export const SetErrorContext = createContext<any>(null);
 
@@ -201,12 +202,8 @@ function App() {
   return (
     <div className="App">
       {demoMode && <DemoStatus />}
-      {error && (
-        <h3 style={{ color: "#f00", position: "relative", zIndex: 10 }}>
-          ERROR: {error}
-        </h3>
-      )}
-      {isLoading && <Loading />}
+      {error && <ErrorView error={error} />}
+      {isLoading && <LoadingView />}
       <SetErrorContext.Provider value={setError}>
         {!isLoading && seriesItems ? (
           <Fragment>
