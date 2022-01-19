@@ -44,6 +44,8 @@ function App() {
     [collectionId, collectionName, seriesItems, updatedAtMs]
   );
 
+  const changesSaved = !updatedAtMs || updatedAtMs < savedAtMs;
+
   const hydrateCollection = (collection: Collection): void => {
     setCollectionId(collection.id);
     setCollectionName(collection.name);
@@ -85,13 +87,24 @@ function App() {
   useEffect(backupChanges, [demoMode, collection, updatedAtMs]);
 
   const saveChanges = (): void => {
-    if (!updatedAtMs || updatedAtMs < savedAtMs) return;
-    if (demoMode || !collection) return;
+    if (demoMode || !collection || changesSaved) return;
     updateCollection(collection)
       .then(() => setSavedAtMs(Date.now()))
       .catch(() => setError("Could not save changes."));
   };
   useInterval(saveChanges, SAVE_INTERVAL);
+
+  // warning for unsaved changes
+  useEffect(() => {
+    const leavePageWarning = (e: BeforeUnloadEvent) => {
+      if (!demoMode && collectionId && !changesSaved) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", leavePageWarning);
+    return () => window.removeEventListener("beforeunload", leavePageWarning);
+  }, [changesSaved, collectionId, demoMode]);
 
   const enterDemoMode = (): void => {
     setDemoMode(true);
