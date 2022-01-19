@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Format, SORT, SeriesItem } from "../types";
+import { SeriesItem } from "../types";
+import { SORT } from "../constants";
 import SeriesView from "./SeriesView";
 import AddSessionView from "./AddSessionView";
-import { reverse } from "dns";
-import { classicNameResolver } from "typescript";
 
 type Props = {
   seriesItems: Array<SeriesItem>;

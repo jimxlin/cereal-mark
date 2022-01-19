@@ -7,12 +7,13 @@ import {
   PutCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { TABLE_NAME, Collection } from "./types";
+import { Collection } from "./types";
 
 /************
  * DynamoDB *
  ************/
 
+const tableName = process.env.REACT_APP_AWS_DDB_TABLE_NAME;
 const ddbClient = new DynamoDBClient({
   region: process.env.REACT_APP_AWS_REGION,
   credentials: fromCognitoIdentityPool({
@@ -36,7 +37,7 @@ export const getCollection = (
 ): Promise<GetCommandOutput> => {
   return ddbDocClient.send(
     new GetCommand({
-      TableName: TABLE_NAME,
+      TableName: tableName,
       Key: { id: collectionId },
     })
   );
@@ -47,7 +48,7 @@ export const createCollection = (
 ): Promise<PutCommandOutput> => {
   return ddbDocClient.send(
     new PutCommand({
-      TableName: TABLE_NAME,
+      TableName: tableName,
       // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.OperatorsAndFunctions.html
       ConditionExpression: "attribute_not_exists(id)",
       Item: collection,
@@ -60,7 +61,7 @@ export const updateCollection = (
 ): Promise<PutCommandOutput> => {
   return ddbDocClient.send(
     new PutCommand({
-      TableName: TABLE_NAME,
+      TableName: tableName,
       // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.OperatorsAndFunctions.html
       ConditionExpression: "attribute_exists(id)",
       Item: collection,

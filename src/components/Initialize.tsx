@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { xxhash3 } from "hash-wasm";
+import { generateId } from "../helpers";
 import { createCollection } from "../api";
 import { Collection } from "../types";
+import { DEFAULT_ERROR } from "../constants";
 import { SetErrorContext } from "../App";
 
 type Props = {
@@ -14,10 +15,7 @@ function Initialize({ setIsLoading, enterDemoMode }: Props) {
   const initialize = async (): Promise<void> => {
     setIsLoading(false);
     setError(undefined);
-    let uniqueId: string = Date.now().toString();
-    uniqueId = uniqueId + navigator.userAgent;
-    uniqueId = uniqueId + Math.floor(Math.random() * 1000).toString();
-    const collectionId = await xxhash3(uniqueId);
+    const collectionId = await generateId();
     const collection: Collection = {
       id: collectionId,
       name: "",
@@ -36,7 +34,7 @@ function Initialize({ setIsLoading, enterDemoMode }: Props) {
       ) {
         setError("Please try again.");
       } else {
-        setError(err instanceof Error ? err.message : JSON.stringify(err));
+        setError(err instanceof Error ? err.message : DEFAULT_ERROR);
       }
       setIsLoading(false);
     }

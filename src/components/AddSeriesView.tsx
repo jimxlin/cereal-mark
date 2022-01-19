@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { SetErrorContext } from "../App";
-import { FORMAT, Format } from "../types";
+import { Format } from "../types";
+import { FORMAT, DEFAULT_ERROR } from "../constants";
 import { useInput } from "../hooks";
 
 type Props = {
@@ -16,21 +17,16 @@ type Props = {
 
 function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
   const setError = useContext(SetErrorContext);
-  const [name, resetName, bindName] = useInput("");
-  const [format, resetFormat, bindFormat] = useInput("SHOW");
-  // workaround for https://github.com/facebook/react/issues/6222#issuecomment-194061477
-  const [saga, resetSaga, bindSaga] = useInput("");
-  const [act, resetAct, bindAct] = useInput(1);
-  const [newViewUrl, resetViewUrl, bindViewUrl] = useInput("");
+  const [name, bindName] = useInput("");
+  const [format, bindFormat] = useInput("SHOW");
+  // empty string workaround for https://github.com/facebook/react/issues/6222#issuecomment-194061477
+  const [saga, bindSaga] = useInput("");
+  const [act, bindAct] = useInput(1);
+  const [newViewUrl, bindViewUrl] = useInput("");
 
   const resetNewSeries = (): void => {
     setError(undefined);
     clearAddSeriesForm();
-    resetName();
-    resetFormat();
-    resetSaga();
-    resetAct();
-    resetViewUrl();
   };
 
   const saveSeries = (): void => {
@@ -45,7 +41,7 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
       );
       resetNewSeries();
     } catch (err) {
-      setError(err instanceof Error ? err.message : JSON.stringify(err));
+      setError(err instanceof Error ? err.message : DEFAULT_ERROR);
     }
   };
 

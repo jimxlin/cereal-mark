@@ -1,20 +1,17 @@
 import { useState, useEffect, useMemo, Fragment, createContext } from "react";
-import {
-  SAVE_INTERVAL,
-  Format,
-  Collection,
-  SeriesItem,
-  Session,
-} from "./types";
+import { Format, Collection, SeriesItem, Session } from "./types";
+import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
 import { validUrl } from "./helpers";
 import demoData from "./demo-data";
 import "./App.css";
+import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Initialize from "./components/Initialize";
-import Loading from "./components/Loading";
+import ErrorView from "./components/ErrorView";
+import LoadingView from "./components/LoadingView";
 
 export const SetErrorContext = createContext<any>(null);
 
@@ -73,8 +70,7 @@ function App() {
         hydrateCollection(collection);
         setIsLoading(false);
       } catch (err) {
-        // TODO: generic error message in prod
-        setError(err instanceof Error ? err.message : JSON.stringify(err));
+        setError(err instanceof Error ? err.message : DEFAULT_ERROR);
         setIsLoading(false);
       }
     };
@@ -90,7 +86,7 @@ function App() {
 
   const saveChanges = (): void => {
     if (!updatedAtMs || updatedAtMs < savedAtMs) return;
-    if (!collection) return;
+    if (demoMode || !collection) return;
     updateCollection(collection)
       .then(() => setSavedAtMs(Date.now()))
       .catch(() => setError("Could not save changes."));
@@ -185,28 +181,11 @@ function App() {
     );
   };
 
-  const DemoStatus = () => (
-    <div className="demo-bar">
-      DEMO MODE{" "}
-      <button
-        onClick={() => {
-          window.location.href = "/";
-        }}
-      >
-        exit
-      </button>
-    </div>
-  );
-
   return (
     <div className="App">
       {demoMode && <DemoStatus />}
-      {error && (
-        <h3 style={{ color: "#f00", position: "relative", zIndex: 10 }}>
-          ERROR: {error}
-        </h3>
-      )}
-      {isLoading && <Loading />}
+      {error && <ErrorView error={error} />}
+      {isLoading && <LoadingView />}
       <SetErrorContext.Provider value={setError}>
         {!isLoading && seriesItems ? (
           <Fragment>

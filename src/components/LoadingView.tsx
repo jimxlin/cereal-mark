@@ -1,4 +1,4 @@
-function Loading() {
+function LoadingView() {
   return (
     <div style={{ width: "100vw", textAlign: "center", marginTop: "5rem" }}>
       <img src="/spinner.gif" alt="Loading spinner" />
@@ -6,4 +6,4 @@ function Loading() {
   );
 }
 
-export default Loading;
+export default LoadingView;
