@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Format } from "../types";
 import AddSeriesView from "./AddSeriesView";
-import CollectionNameForm from "./RenameCollectionView";
+import RenameCollectionView from "./RenameCollectionView";
 
 type Props = {
   collectionName: string | undefined;
@@ -23,12 +23,7 @@ function ManageCollection({
   const [showRename, setShowRename] = useState(false);
   const [showAddSeries, setShowAddSeries] = useState(false);
 
-  const resetNewName = (): void => {
-    setShowRename(false);
-  };
-
-  const saveName = (newName: string): void => {
-    updateCollectionName(newName);
+  const clearRenameCollectionForm = (): void => {
     setShowRename(false);
   };
 
@@ -39,10 +34,10 @@ function ManageCollection({
   return (
     <div>
       {showRename && (
-        <CollectionNameForm
+        <RenameCollectionView
           collectionName={collectionName}
-          saveName={saveName}
-          resetNewName={resetNewName}
+          updateCollectionName={updateCollectionName}
+          clearRenameCollectionForm={clearRenameCollectionForm}
         />
       )}
       {showAddSeries && (

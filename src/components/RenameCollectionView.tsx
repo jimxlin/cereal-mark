@@ -1,17 +1,39 @@
+import { useContext } from "react";
 import { useInput } from "../hooks";
+import { DEFAULT_ERROR } from "../constants";
+import { SetErrorContext } from "../App";
 
 type Props = {
   collectionName: string | undefined;
-  saveName: (name: string) => void;
-  resetNewName: () => void;
+  updateCollectionName: (name: string) => void;
+  clearRenameCollectionForm: () => void;
 };
 
 function RenameCollectionView({
   collectionName,
-  saveName,
-  resetNewName,
+  updateCollectionName,
+  clearRenameCollectionForm,
 }: Props) {
+  const setError = useContext(SetErrorContext);
   const [newName, newNameBind] = useInput(collectionName || "");
+
+  const disallowedName: boolean =
+    newName.length === 0 || newName === collectionName;
+
+  const resetNewName = (): void => {
+    setError(undefined);
+    clearRenameCollectionForm();
+  };
+
+  const saveName = (): void => {
+    if (disallowedName) return;
+    try {
+      updateCollectionName(newName);
+      resetNewName();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : DEFAULT_ERROR);
+    }
+  };
 
   return (
     <div className="form-container">
@@ -23,7 +45,9 @@ function RenameCollectionView({
         </label>
       </div>
       <div>
-        <button onClick={() => saveName(newName)}>Save</button>
+        <button disabled={disallowedName} onClick={saveName}>
+          Save
+        </button>
         <button onClick={resetNewName}>Cancel</button>
       </div>
     </div>
