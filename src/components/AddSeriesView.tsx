@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { SetErrorContext } from "../App";
 import { Format } from "../types";
-import { FORMAT } from "../constants";
+import { FORMAT, DEFAULT_ERROR } from "../constants";
 import { useInput } from "../hooks";
 
 type Props = {
@@ -41,7 +41,7 @@ function AddSeriesView({ clearAddSeriesForm, addSeries }: Props) {
       );
       resetNewSeries();
     } catch (err) {
-      setError(err instanceof Error ? err.message : JSON.stringify(err));
+      setError(err instanceof Error ? err.message : DEFAULT_ERROR);
     }
   };
 

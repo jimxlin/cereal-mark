@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, Fragment, createContext } from "react";
 import { Format, Collection, SeriesItem, Session } from "./types";
-import { SAVE_INTERVAL } from "./constants";
+import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
 import { validUrl } from "./helpers";
@@ -69,8 +69,7 @@ function App() {
         hydrateCollection(collection);
         setIsLoading(false);
       } catch (err) {
-        // TODO: generic error message in prod
-        setError(err instanceof Error ? err.message : JSON.stringify(err));
+        setError(err instanceof Error ? err.message : DEFAULT_ERROR);
         setIsLoading(false);
       }
     };

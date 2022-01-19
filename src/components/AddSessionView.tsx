@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Session, SeriesItem } from "../types";
-import { FORMAT, DATE_LOCALE, DATE_OPTIONS } from "../constants";
+import { FORMAT, DEFAULT_ERROR, DATE_LOCALE, DATE_OPTIONS } from "../constants";
 import { SetErrorContext } from "../App";
 import { useInput } from "../hooks";
 
@@ -46,7 +46,7 @@ function AddSessionView({
       );
       resetNewSession();
     } catch (err) {
-      setError(err instanceof Error ? err.message : JSON.stringify(err));
+      setError(err instanceof Error ? err.message : DEFAULT_ERROR);
     }
   };
 

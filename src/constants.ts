@@ -2,6 +2,8 @@ export const TABLE_NAME = "CerealMark";
 
 export const SAVE_INTERVAL = 5000;
 
+export const DEFAULT_ERROR = "Something went wrong.";
+
 export const FORMAT = {
   COMIC: {
     NAME: "Comic",

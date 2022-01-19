@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { generateId } from "../helpers";
 import { createCollection } from "../api";
 import { Collection } from "../types";
+import { DEFAULT_ERROR } from "../constants";
 import { SetErrorContext } from "../App";
 
 type Props = {
@@ -33,7 +34,7 @@ function Initialize({ setIsLoading, enterDemoMode }: Props) {
       ) {
         setError("Please try again.");
       } else {
-        setError(err instanceof Error ? err.message : JSON.stringify(err));
+        setError(err instanceof Error ? err.message : DEFAULT_ERROR);
       }
       setIsLoading(false);
     }
