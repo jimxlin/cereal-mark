@@ -6,6 +6,7 @@ import { useInterval } from "./hooks";
 import { validUrl } from "./helpers";
 import demoData from "./demo-data";
 import "./App.css";
+import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Initialize from "./components/Initialize";
@@ -85,7 +86,7 @@ function App() {
 
   const saveChanges = (): void => {
     if (!updatedAtMs || updatedAtMs < savedAtMs) return;
-    if (!collection) return;
+    if (demoMode || !collection) return;
     updateCollection(collection)
       .then(() => setSavedAtMs(Date.now()))
       .catch(() => setError("Could not save changes."));
@@ -179,19 +180,6 @@ function App() {
       })
     );
   };
-
-  const DemoStatus = () => (
-    <div className="demo-bar">
-      DEMO MODE{" "}
-      <button
-        onClick={() => {
-          window.location.href = "/";
-        }}
-      >
-        exit
-      </button>
-    </div>
-  );
 
   return (
     <div className="App">
