@@ -199,23 +199,25 @@ function App() {
       {demoMode && <DemoStatus />}
       {error && <ErrorView error={error} />}
       {isLoading && <LoadingView />}
-      <SetErrorContext.Provider value={setError}>
-        {!isLoading && seriesItems ? (
-          <Fragment>
-            <ManageCollection
-              addSeries={addSeries}
-              collectionName={collectionName}
-              updateCollectionName={updateCollectionName}
+      {!isLoading && (
+        <SetErrorContext.Provider value={setError}>
+          {seriesItems ? (
+            <Fragment>
+              <ManageCollection
+                addSeries={addSeries}
+                collectionName={collectionName}
+                updateCollectionName={updateCollectionName}
+              />
+              <SeriesList seriesItems={seriesItems} addSession={addSession} />
+            </Fragment>
+          ) : (
+            <Initialize
+              setIsLoading={setIsLoading}
+              enterDemoMode={enterDemoMode}
             />
-            <SeriesList seriesItems={seriesItems} addSession={addSession} />
-          </Fragment>
-        ) : (
-          <Initialize
-            setIsLoading={setIsLoading}
-            enterDemoMode={enterDemoMode}
-          />
-        )}
-      </SetErrorContext.Provider>
+          )}
+        </SetErrorContext.Provider>
+      )}
     </div>
   );
 }
