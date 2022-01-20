@@ -22,9 +22,6 @@ function App() {
   const [collectionId, setCollectionId] = useState<string | undefined>(
     undefined
   );
-  const [passphraseHash, setPassphraseHash] = useState<string | undefined>(
-    undefined
-  );
   const [updatedAtMs, setUpdatedAtMs] = useState<number | undefined>(undefined);
   const [savedAtMs, setSavedAtMs] = useState<number>(Date.now());
   const [collectionName, setCollectionName] = useState<string | undefined>(
@@ -33,8 +30,6 @@ function App() {
   const [seriesItems, setSeriesItems] = useState<Array<SeriesItem> | undefined>(
     undefined
   );
-  const [canEdit, setCanEdit] = useState(true);
-
   const collection = useMemo(
     () =>
       !collectionId || !seriesItems || !updatedAtMs
