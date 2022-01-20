@@ -7,12 +7,11 @@ import { SetErrorContext } from "../App";
 
 type Props = {
   setIsLoading: (loading: boolean) => void;
-  enterDemoMode: () => void;
 };
 
-function Initialize({ setIsLoading, enterDemoMode }: Props) {
+function Home({ setIsLoading }: Props) {
   const setError = useContext(SetErrorContext);
-  const initialize = async (): Promise<void> => {
+  const initializeCollection = async (): Promise<void> => {
     setIsLoading(false);
     setError(undefined);
     const collectionId = await generateId();
@@ -39,6 +38,9 @@ function Initialize({ setIsLoading, enterDemoMode }: Props) {
       setIsLoading(false);
     }
   };
+  const enterDemoMode = () => {
+    window.location.pathname = "demo";
+  };
 
   return (
     <div>
@@ -48,7 +50,7 @@ function Initialize({ setIsLoading, enterDemoMode }: Props) {
         the cloud, just use your URL to access it.
       </p>
       <div>
-        <button onClick={initialize}>Create a New List</button>
+        <button onClick={initializeCollection}>Create a New List</button>
       </div>
       <div>
         <button onClick={enterDemoMode}>Try the Demo</button>
@@ -57,4 +59,4 @@ function Initialize({ setIsLoading, enterDemoMode }: Props) {
   );
 }
 
-export default Initialize;
+export default Home;

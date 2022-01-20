@@ -9,7 +9,7 @@ import "./App.css";
 import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
-import Initialize from "./components/Initialize";
+import Home from "./components/Home";
 import ErrorView from "./components/ErrorView";
 import LoadingView from "./components/LoadingView";
 
@@ -52,11 +52,16 @@ function App() {
     setUpdatedAtMs(collection.updatedAtMs);
   };
 
-  const initialLoad = (): void => {
+  const initialize = (): void => {
     setError(undefined);
     const id = window.location.pathname.substring(1);
     if (id.length === 0) {
       setIsLoading(false);
+      return;
+    }
+    if (id === "demo") {
+      setIsLoading(false);
+      enterDemoMode();
       return;
     }
     // https://www.robinwieruch.de/react-hooks-fetch-data/
@@ -77,7 +82,7 @@ function App() {
     };
     fetchData();
   };
-  useEffect(initialLoad, []);
+  useEffect(initialize, []);
 
   const backupChanges = (): void => {
     if (demoMode || !collection) return;
@@ -210,10 +215,7 @@ function App() {
               <SeriesList seriesItems={seriesItems} addSession={addSession} />
             </Fragment>
           ) : (
-            <Initialize
-              setIsLoading={setIsLoading}
-              enterDemoMode={enterDemoMode}
-            />
+            <Home setIsLoading={setIsLoading} />
           )}
         </SetErrorContext.Provider>
       )}
