@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo, Fragment, createContext } from "react";
+import { Center } from "@chakra-ui/react";
 import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
 import { validUrl } from "./helpers";
 import demoData from "./demo-data";
-import "./App.css";
 import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
@@ -61,7 +61,8 @@ function App() {
     }
     if (id === "demo") {
       setIsLoading(false);
-      enterDemoMode();
+      setDemoMode(true);
+      hydrateCollection(demoData);
       return;
     }
     // https://www.robinwieruch.de/react-hooks-fetch-data/
@@ -109,11 +110,6 @@ function App() {
     window.addEventListener("beforeunload", leavePageWarning);
     return () => window.removeEventListener("beforeunload", leavePageWarning);
   }, [changesSaved, collectionId, demoMode]);
-
-  const enterDemoMode = (): void => {
-    setDemoMode(true);
-    hydrateCollection(demoData);
-  };
 
   const updateCollectionName = (name: string): void => {
     setUpdatedAtMs(Date.now());
@@ -199,7 +195,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <Center w="100vw" p={8}>
       {demoMode && <DemoStatus />}
       {error && <ErrorView error={error} />}
       {isLoading && <LoadingView />}
@@ -219,7 +215,7 @@ function App() {
           )}
         </SetErrorContext.Provider>
       )}
-    </div>
+    </Center>
   );
 }
 
