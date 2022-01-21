@@ -1,17 +1,6 @@
 import { useState } from "react";
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  Input,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from "@chakra-ui/react";
+import { Button, FormControl, FormErrorMessage, Input } from "@chakra-ui/react";
+import ModalForm from "./ModalForm";
 import { useInput } from "../hooks";
 import { DEFAULT_ERROR } from "../constants";
 
@@ -29,7 +18,7 @@ function RenameCollectionView({
   updateCollectionName,
 }: Props) {
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
-  const [newName, newNameBind] = useInput(collectionName || "");
+  const [newName, resetNewName, newNameBind] = useInput(collectionName || "");
 
   const disallowedName: boolean =
     newName.length === 0 || newName === collectionName;
@@ -44,32 +33,24 @@ function RenameCollectionView({
     }
   };
 
-  const Form = () => (
-    <FormControl isInvalid={!!errorMsg}>
-      <Input autoFocus type="text" {...newNameBind} />
-      {errorMsg && <FormErrorMessage>{errorMsg}</FormErrorMessage>}
-    </FormControl>
-  );
+  const cancelSaveName = (): void => {
+    resetNewName();
+    onClose();
+  };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Rename Collection</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Form />
-        </ModalBody>
-        <ModalFooter>
-          <Button mr={2} onClick={onClose}>
-            Cancel
-          </Button>
-          <Button disabled={disallowedName} onClick={saveName}>
-            Save
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <ModalForm
+      header="Rename Collection"
+      isOpen={isOpen}
+      onClose={cancelSaveName}
+      onSave={saveName}
+      saveDisabled={disallowedName}
+    >
+      <FormControl isInvalid={!!errorMsg}>
+        <Input autoFocus type="text" {...newNameBind} />
+        {errorMsg && <FormErrorMessage>{errorMsg}</FormErrorMessage>}
+      </FormControl>
+    </ModalForm>
   );
 }
 

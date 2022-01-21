@@ -10,9 +10,8 @@ export function useInput(initialValue: any) {
       ),
     ...(typeof initialValue === "boolean" && { checked: value }),
   };
-  // const reset = (): void => setValue(initialValue);
-  // return [value, reset, bind];
-  return [value, bind];
+  const reset = (): void => setValue(initialValue);
+  return [value, reset, bind];
 }
 
 // https://overreacted.io/making-setinterval-declarative-with-react-hooks/
