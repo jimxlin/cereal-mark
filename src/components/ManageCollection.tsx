@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  HStack,
+  Heading,
+  Button,
+  IconButton,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
 import AddSeriesView from "./AddSeriesView";
 import RenameCollectionView from "./RenameCollectionView";
@@ -20,12 +28,17 @@ function ManageCollection({
   collectionName,
   updateCollectionName,
 }: Props) {
-  const [showRename, setShowRename] = useState(false);
   const [showAddSeries, setShowAddSeries] = useState(false);
-
-  const clearRenameCollectionForm = (): void => {
-    setShowRename(false);
-  };
+  const {
+    isOpen: isOpenNameForm,
+    onOpen: onOpenNameForm,
+    onClose: onCloseNameForm,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenSeriesForm,
+    onOpen: onOpenSeriesForm,
+    onClose: onCloseSeriesForm,
+  } = useDisclosure();
 
   const clearAddSeriesForm = (): void => {
     setShowAddSeries(false);
@@ -33,31 +46,32 @@ function ManageCollection({
 
   return (
     <div>
-      {showRename && (
-        <RenameCollectionView
-          collectionName={collectionName}
-          updateCollectionName={updateCollectionName}
-          clearRenameCollectionForm={clearRenameCollectionForm}
-        />
-      )}
+      <RenameCollectionView
+        isOpen={isOpenNameForm}
+        onClose={onCloseNameForm}
+        collectionName={collectionName}
+        updateCollectionName={updateCollectionName}
+      />
       {showAddSeries && (
         <AddSeriesView
           clearAddSeriesForm={clearAddSeriesForm}
           addSeries={addSeries}
         />
       )}
-      <div>
-        <h2>{collectionName || "Unnamed Collection"}</h2>
-        <button onClick={() => setShowRename(true)}>Rename Collection</button>
-      </div>
-      <div>
-        <button
+      <HStack>
+        <Heading>{collectionName || "Unnamed Collection"}</Heading>
+        <IconButton
+          aria-label="Rename collection"
+          icon={<EditIcon />}
+          onClick={onOpenNameForm}
+        />
+        <Button
           style={{ cursor: "pointer" }}
           onClick={() => setShowAddSeries(true)}
         >
           Add Series
-        </button>
-      </div>
+        </Button>
+      </HStack>
     </div>
   );
 }

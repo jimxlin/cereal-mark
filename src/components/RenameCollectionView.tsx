@@ -1,56 +1,75 @@
-import { useContext } from "react";
+import { useState } from "react";
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  Input,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
 import { useInput } from "../hooks";
 import { DEFAULT_ERROR } from "../constants";
-import { SetErrorContext } from "../App";
 
 type Props = {
   collectionName: string | undefined;
   updateCollectionName: (name: string) => void;
-  clearRenameCollectionForm: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
 function RenameCollectionView({
+  isOpen,
+  onClose,
   collectionName,
   updateCollectionName,
-  clearRenameCollectionForm,
 }: Props) {
-  const setError = useContext(SetErrorContext);
+  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const [newName, newNameBind] = useInput(collectionName || "");
 
   const disallowedName: boolean =
     newName.length === 0 || newName === collectionName;
 
-  const resetNewName = (): void => {
-    setError(undefined);
-    clearRenameCollectionForm();
-  };
-
   const saveName = (): void => {
     if (disallowedName) return;
     try {
       updateCollectionName(newName);
-      resetNewName();
+      onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : DEFAULT_ERROR);
+      setErrorMsg(err instanceof Error ? err.message : DEFAULT_ERROR);
     }
   };
 
+  const Form = () => (
+    <FormControl isInvalid={!!errorMsg}>
+      <Input autoFocus type="text" {...newNameBind} />
+      {errorMsg && <FormErrorMessage>{errorMsg}</FormErrorMessage>}
+    </FormControl>
+  );
+
   return (
-    <div className="form-container">
-      <h2>Rename Collection</h2>
-      <div>
-        <label>
-          Collection Name
-          <input autoFocus type="text" {...newNameBind} />
-        </label>
-      </div>
-      <div>
-        <button disabled={disallowedName} onClick={saveName}>
-          Save
-        </button>
-        <button onClick={resetNewName}>Cancel</button>
-      </div>
-    </div>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Rename Collection</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Form />
+        </ModalBody>
+        <ModalFooter>
+          <Button mr={2} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button disabled={disallowedName} onClick={saveName}>
+            Save
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }
 

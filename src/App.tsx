@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, Fragment, createContext } from "react";
-import { Center } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
@@ -195,27 +195,27 @@ function App() {
   };
 
   return (
-    <Center w="100vw" p={8}>
+    <VStack w="100vw" ph={8}>
       {demoMode && <DemoStatus />}
       {error && <ErrorView error={error} />}
       {isLoading && <LoadingView />}
       {!isLoading && (
         <SetErrorContext.Provider value={setError}>
           {seriesItems ? (
-            <Fragment>
+            <>
               <ManageCollection
                 addSeries={addSeries}
                 collectionName={collectionName}
                 updateCollectionName={updateCollectionName}
               />
               <SeriesList seriesItems={seriesItems} addSession={addSession} />
-            </Fragment>
+            </>
           ) : (
             <Home setIsLoading={setIsLoading} />
           )}
         </SetErrorContext.Provider>
       )}
-    </Center>
+    </VStack>
   );
 }
 

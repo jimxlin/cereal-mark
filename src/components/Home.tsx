@@ -39,19 +39,18 @@ function Home({ setIsLoading }: Props) {
       setIsLoading(false);
     }
   };
-  const enterDemoMode = () => {
-    window.location.pathname = "demo";
-  };
 
   return (
-    <VStack spacing={4}>
+    <VStack spacing={4} mt={4}>
       <Heading>CerealMark</Heading>
       <Text>
         Keep track of series that you are following. Once you've created your
         page, bookmark it to access it anytime.
       </Text>
       <Button onClick={initializeCollection}>Get Started</Button>
-      <Button onClick={enterDemoMode}>Try the Demo</Button>
+      <Button as="a" href="/demo">
+        Try the Demo
+      </Button>
     </VStack>
   );
 }
