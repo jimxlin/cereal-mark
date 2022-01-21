@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { VStack } from "@chakra-ui/react";
 import { SeriesItem } from "../types";
 import { SORT } from "../constants";
+import SeriesFilter from "./SeriesFilter";
 import SeriesView from "./SeriesView";
 import AddSessionView from "./AddSessionView";
 
@@ -61,49 +63,12 @@ function SeriesList({ seriesItems, addSession }: Props) {
     setSeriesToUpdate(undefined);
   };
 
-  const formatPresence = (format: string) => {
+  const formatPresence = (format: string): boolean => {
     return seriesItems.some((item) => item.format === format);
   };
 
-  const sortButtons = [
-    { name: "Recency", value: SORT.RECENCY },
-    { name: "Title", value: SORT.TITLE },
-  ].map((method) => {
-    const selected = sortMethod === method.value;
-    return (
-      <button
-        key={method.value}
-        name={method.value}
-        onClick={sortBy}
-        {...(selected && { className: "inverse-btn" })}
-      >
-        {method.name} {selected && (sortReverse ? "<" : ">")}
-      </button>
-    );
-  });
-
-  const filterButtons = [
-    { name: "Any", value: "ANY" },
-    { name: "Shows", value: "SHOW" },
-    { name: "Comics", value: "COMIC" },
-    { name: "Books", value: "BOOK" },
-  ].map((format) => {
-    if (format.value !== "ANY" && !formatPresence(format.value)) return null;
-    const selected = filterMethod === format.value;
-    return (
-      <button
-        key={format.value}
-        name={format.value}
-        onClick={filterBy}
-        {...(selected && { className: "inverse-btn" })}
-      >
-        {format.name}
-      </button>
-    );
-  });
-
   return (
-    <div className="filters">
+    <VStack spacing={4}>
       {seriesToUpdate && (
         <AddSessionView
           seriesItem={seriesToUpdate}
@@ -111,15 +76,14 @@ function SeriesList({ seriesItems, addSession }: Props) {
           clearAddSessionForm={clearAddSessionForm}
         />
       )}
-      <div>
-        Sort:
-        {sortButtons}
-      </div>
-      <div>
-        Filter:
-        {filterButtons}
-      </div>
-      <br />
+      <SeriesFilter
+        formatPresence={formatPresence}
+        filterMethod={filterMethod}
+        filterBy={filterBy}
+        sortMethod={sortMethod}
+        sortReverse={sortReverse}
+        sortBy={sortBy}
+      />
       {displayItems().map((item) => (
         <SeriesView
           key={item.title}
@@ -127,7 +91,7 @@ function SeriesList({ seriesItems, addSession }: Props) {
           setSeriesToUpdate={setSeriesToUpdate}
         />
       ))}
-    </div>
+    </VStack>
   );
 }
 
