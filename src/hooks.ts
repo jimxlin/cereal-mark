@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
+// TODO: remove this once all forms have been refactored
 export function useInput(initialValue: any) {
   const [value, setValue] = useState(initialValue);
   const bind = {

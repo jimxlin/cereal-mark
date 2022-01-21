@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Button, FormControl, FormErrorMessage, Input } from "@chakra-ui/react";
-import ModalForm from "./ModalForm";
-import { useInput } from "../hooks";
+import { useContext } from "react";
+import { FormikValues } from "formik";
 import { DEFAULT_ERROR } from "../constants";
+import { SetErrorContext } from "../App";
+import ModalForm from "./ModalForm";
+import { CollectionNameForm } from "../forms";
 
 type Props = {
   collectionName: string | undefined;
@@ -17,39 +18,31 @@ function RenameCollectionView({
   collectionName,
   updateCollectionName,
 }: Props) {
-  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
-  const [newName, resetNewName, newNameBind] = useInput(collectionName || "");
+  const setError = useContext(SetErrorContext);
+  const FORM_ID = "collection-name-form";
 
-  const disallowedName: boolean =
-    newName.length === 0 || newName === collectionName;
-
-  const saveName = (): void => {
-    if (disallowedName) return;
+  const onSubmit = (values: FormikValues): void => {
+    if (values.collectionName === collectionName) return;
     try {
-      updateCollectionName(newName);
+      updateCollectionName(values.collectionName);
       onClose();
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : DEFAULT_ERROR);
+      setError(err instanceof Error ? err.message : DEFAULT_ERROR);
     }
-  };
-
-  const cancelSaveName = (): void => {
-    resetNewName();
-    onClose();
   };
 
   return (
     <ModalForm
       header="Rename Collection"
       isOpen={isOpen}
-      onClose={cancelSaveName}
-      onSave={saveName}
-      saveDisabled={disallowedName}
+      onClose={onClose}
+      formId={FORM_ID}
     >
-      <FormControl isInvalid={!!errorMsg}>
-        <Input autoFocus type="text" {...newNameBind} />
-        {errorMsg && <FormErrorMessage>{errorMsg}</FormErrorMessage>}
-      </FormControl>
+      <CollectionNameForm
+        formId={FORM_ID}
+        initialName={collectionName}
+        onSubmit={onSubmit}
+      />
     </ModalForm>
   );
 }

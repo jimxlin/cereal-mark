@@ -4,7 +4,6 @@ import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
-import { validUrl } from "./helpers";
 import demoData from "./demo-data";
 import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
@@ -116,6 +115,11 @@ function App() {
     setCollectionName(name);
   };
 
+  const seriesExists = (title: string | undefined): boolean => {
+    if (!title) return true;
+    return Boolean(seriesItems?.some((item) => item.title === title));
+  };
+
   const addSeries = (
     title: string,
     format: Format,
@@ -128,9 +132,6 @@ function App() {
     )[0];
     if (existingSeries) {
       throw new Error("Cannot add series, title already exists");
-    }
-    if (viewUrl && !validUrl(viewUrl)) {
-      throw new Error("Cannot add session, URL is invalid");
     }
     setUpdatedAtMs(Date.now());
     const firstSession: Session = {
@@ -171,9 +172,6 @@ function App() {
     if (seriesItem.sessions.length === 0) {
       throw new Error("Cannot add session, missing first session");
     }
-    if (viewUrl && !validUrl(viewUrl)) {
-      throw new Error("Cannot add session, URL is invalid");
-    }
     setUpdatedAtMs(Date.now());
     const session: Session = {
       saga,
@@ -205,6 +203,7 @@ function App() {
             <>
               <ManageCollection
                 addSeries={addSeries}
+                seriesExists={seriesExists}
                 collectionName={collectionName}
                 updateCollectionName={updateCollectionName}
               />

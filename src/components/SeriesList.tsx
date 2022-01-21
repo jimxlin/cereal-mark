@@ -5,6 +5,13 @@ import { SORT } from "../constants";
 import SeriesFilter from "./SeriesFilter";
 import SeriesView from "./SeriesView";
 import AddSessionView from "./AddSessionView";
+import {
+  HStack,
+  Heading,
+  Button,
+  IconButton,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 type Props = {
   seriesItems: Array<SeriesItem>;
@@ -23,6 +30,21 @@ function SeriesList({ seriesItems, addSession }: Props) {
   const [seriesToUpdate, setSeriesToUpdate] = useState<SeriesItem | undefined>(
     undefined
   );
+
+  const {
+    isOpen: isOpenCreateSessionForm,
+    onOpen: onOpenCreateSessionForm,
+    onClose: onCloseCreateSessionForm,
+  } = useDisclosure();
+
+  const openSessionFormModal = (seriesItem: SeriesItem): void => {
+    setSeriesToUpdate(seriesItem);
+    onOpenCreateSessionForm();
+  };
+  const closeSessionFormModal = (): void => {
+    setSeriesToUpdate(undefined);
+    onCloseCreateSessionForm();
+  };
 
   const filterItems = (items: Array<SeriesItem>): Array<SeriesItem> => {
     if (filterMethod === "ANY") return items;
@@ -59,10 +81,6 @@ function SeriesList({ seriesItems, addSession }: Props) {
     return sortItems(filterItems(seriesItems));
   };
 
-  const clearAddSessionForm = (): void => {
-    setSeriesToUpdate(undefined);
-  };
-
   const formatPresence = (format: string): boolean => {
     return seriesItems.some((item) => item.format === format);
   };
@@ -73,7 +91,8 @@ function SeriesList({ seriesItems, addSession }: Props) {
         <AddSessionView
           seriesItem={seriesToUpdate}
           addSession={addSession}
-          clearAddSessionForm={clearAddSessionForm}
+          isOpen={isOpenCreateSessionForm}
+          onClose={closeSessionFormModal}
         />
       )}
       <SeriesFilter
@@ -88,7 +107,7 @@ function SeriesList({ seriesItems, addSession }: Props) {
         <SeriesView
           key={item.title}
           seriesItem={item}
-          setSeriesToUpdate={setSeriesToUpdate}
+          openSessionForm={openSessionFormModal}
         />
       ))}
     </VStack>

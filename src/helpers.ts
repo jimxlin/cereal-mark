@@ -7,8 +7,7 @@ export const generateId = (): Promise<string> => {
   return sha256(uniqueId);
 };
 
-// https://mathiasbynens.be/demo/url-regex -> @imme_emosol
-export const validUrl = (url: string) => {
-  const urlRegex = new RegExp("https?://(-.)?([^s/?.#-]+.?)+(/[^s]*)?$");
-  return urlRegex.test(url);
+export const toUndefined = (value: any): any => {
+  if (typeof value === "string" && value.length === 0) return undefined;
+  return value;
 };

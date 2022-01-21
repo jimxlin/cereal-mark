@@ -13,19 +13,11 @@ type Props = {
   header: string;
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => void;
-  saveDisabled: boolean;
   children: JSX.Element;
+  formId: string;
 };
 
-function ModalForm({
-  header,
-  isOpen,
-  onClose,
-  onSave,
-  saveDisabled,
-  children,
-}: Props) {
+function ModalForm({ header, isOpen, onClose, children, formId }: Props) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -37,7 +29,7 @@ function ModalForm({
           <Button mr={2} onClick={onClose}>
             Cancel
           </Button>
-          <Button disabled={saveDisabled} onClick={onSave}>
+          <Button type="submit" form={formId}>
             Save
           </Button>
         </ModalFooter>

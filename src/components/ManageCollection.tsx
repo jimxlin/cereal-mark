@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   HStack,
   Heading,
@@ -21,54 +20,48 @@ type Props = {
     saga: number | undefined,
     viewUrl: string | undefined
   ) => void;
+  seriesExists: (title: string | undefined) => boolean;
 };
 
 function ManageCollection({
   addSeries,
   collectionName,
   updateCollectionName,
+  seriesExists,
 }: Props) {
-  const [showAddSeries, setShowAddSeries] = useState(false);
   const {
-    isOpen: isOpenNameForm,
-    onOpen: onOpenNameForm,
-    onClose: onCloseNameForm,
+    isOpen: isOpenCollectionNameForm,
+    onOpen: onOpenCollectionNameForm,
+    onClose: onCloseCollectionNameForm,
   } = useDisclosure();
   const {
-    isOpen: isOpenSeriesForm,
-    onOpen: onOpenSeriesForm,
-    onClose: onCloseSeriesForm,
+    isOpen: isOpenCreateSeriesForm,
+    onOpen: onOpenCreateSeriesForm,
+    onClose: onCloseCreateSeriesForm,
   } = useDisclosure();
-
-  const clearAddSeriesForm = (): void => {
-    setShowAddSeries(false);
-  };
 
   return (
     <div>
       <RenameCollectionView
-        isOpen={isOpenNameForm}
-        onClose={onCloseNameForm}
+        isOpen={isOpenCollectionNameForm}
+        onClose={onCloseCollectionNameForm}
         collectionName={collectionName}
         updateCollectionName={updateCollectionName}
       />
-      {showAddSeries && (
-        <AddSeriesView
-          clearAddSeriesForm={clearAddSeriesForm}
-          addSeries={addSeries}
-        />
-      )}
+      <AddSeriesView
+        isOpen={isOpenCreateSeriesForm}
+        onClose={onCloseCreateSeriesForm}
+        addSeries={addSeries}
+        seriesExists={seriesExists}
+      />
       <HStack>
         <Heading>{collectionName || "Unnamed Collection"}</Heading>
         <IconButton
           aria-label="Rename collection"
           icon={<EditIcon />}
-          onClick={onOpenNameForm}
+          onClick={onOpenCollectionNameForm}
         />
-        <Button
-          style={{ cursor: "pointer" }}
-          onClick={() => setShowAddSeries(true)}
-        >
+        <Button style={{ cursor: "pointer" }} onClick={onOpenCreateSeriesForm}>
           Add Series
         </Button>
       </HStack>
