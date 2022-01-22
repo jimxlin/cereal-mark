@@ -1,12 +1,33 @@
+import {
+  Portal,
+  Center,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  CloseButton,
+} from "@chakra-ui/react";
+
 type Props = {
   error: string;
+  setError: (error: string | undefined) => void;
 };
 
-function ErrorView({ error }: Props) {
+function ErrorView({ error, setError }: Props) {
   return (
-    <h3 style={{ color: "#f00", position: "relative", zIndex: 10 }}>
-      ERROR: {error}
-    </h3>
+    <Portal>
+      <Center
+        top="5vh"
+        left="50vw"
+        position="fixed"
+        transform="translateX(-50%)"
+      >
+        <Alert status="error">
+          <AlertIcon />
+          <AlertDescription>{error}</AlertDescription>
+          <CloseButton onClick={() => setError(undefined)} />
+        </Alert>
+      </Center>
+    </Portal>
   );
 }
 

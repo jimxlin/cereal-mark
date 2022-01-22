@@ -195,7 +195,7 @@ function App() {
   return (
     <VStack w="100vw" ph={8}>
       {demoMode && <DemoStatus />}
-      {error && <ErrorView error={error} />}
+      {error && <ErrorView error={error} setError={setError} />}
       {isLoading && <LoadingView />}
       {!isLoading && (
         <SetErrorContext.Provider value={setError}>
