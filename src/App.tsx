@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, Fragment, createContext } from "react";
-import { VStack } from "@chakra-ui/react";
+import { useState, useEffect, useMemo, createContext } from "react";
+import { VStack, useToast } from "@chakra-ui/react";
 import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
@@ -9,7 +9,6 @@ import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Home from "./components/Home";
-import ErrorView from "./components/ErrorView";
 import LoadingView from "./components/LoadingView";
 
 export const SetErrorContext = createContext<any>(null);
@@ -110,6 +109,18 @@ function App() {
     return () => window.removeEventListener("beforeunload", leavePageWarning);
   }, [changesSaved, collectionId, demoMode]);
 
+  const errorToast = useToast();
+  useEffect(() => {
+    if (!error) return;
+    errorToast({
+      position: "top",
+      description: error,
+      status: "error",
+      duration: 20000,
+      isClosable: true,
+    });
+  }, [error]);
+
   const updateCollectionName = (name: string): void => {
     setUpdatedAtMs(Date.now());
     setCollectionName(name);
@@ -195,7 +206,6 @@ function App() {
   return (
     <VStack w="90vw" ph={8}>
       {demoMode && <DemoStatus />}
-      {error && <ErrorView error={error} setError={setError} />}
       {isLoading && <LoadingView />}
       {!isLoading && (
         <SetErrorContext.Provider value={setError}>
