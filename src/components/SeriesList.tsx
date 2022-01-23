@@ -12,6 +12,7 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import { Item } from "framer-motion/types/components/Reorder/Item";
 
 type Props = {
   seriesItems: Array<SeriesItem>;
@@ -72,7 +73,11 @@ function SeriesList({ seriesItems, addSession }: Props) {
 
   const sortBy = (e: React.MouseEvent<HTMLButtonElement>): void => {
     const method = (e.target as HTMLButtonElement).name;
-    if (method === sortMethod) setSortReverse(!sortReverse);
+    if (method === sortMethod) {
+      setSortReverse(!sortReverse);
+    } else {
+      setSortReverse(false);
+    }
     setSortMethod(method);
   };
 
@@ -84,6 +89,10 @@ function SeriesList({ seriesItems, addSession }: Props) {
   const formatPresence = (format: string): boolean => {
     return seriesItems.some((item) => item.format === format);
   };
+
+  const singleFormat = seriesItems.every(
+    (item) => item.format === seriesItems[0].format
+  );
 
   return (
     <VStack spacing={4}>
@@ -97,6 +106,7 @@ function SeriesList({ seriesItems, addSession }: Props) {
       )}
       <SeriesFilter
         formatPresence={formatPresence}
+        singleFormat={singleFormat}
         filterMethod={filterMethod}
         filterBy={filterBy}
         sortMethod={sortMethod}

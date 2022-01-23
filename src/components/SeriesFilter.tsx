@@ -1,8 +1,10 @@
-import { HStack } from "@chakra-ui/react";
+import { VStack, HStack, Button, ButtonGroup } from "@chakra-ui/react";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { SORT } from "../constants";
 
 type Props = {
   filterMethod: string;
+  singleFormat: boolean;
   filterBy: (e: React.MouseEvent<HTMLButtonElement>) => void;
   sortMethod: string;
   sortReverse: boolean;
@@ -12,6 +14,7 @@ type Props = {
 
 function SeriesFilter({
   formatPresence,
+  singleFormat,
   filterMethod,
   filterBy,
   sortMethod,
@@ -24,14 +27,15 @@ function SeriesFilter({
   ].map((method) => {
     const selected = sortMethod === method.value;
     return (
-      <button
+      <Button
         key={method.value}
         name={method.value}
         onClick={sortBy}
-        {...(selected && { className: "inverse-btn" })}
+        variant={selected ? "solid" : "outline"}
+        rightIcon={sortReverse ? <TriangleUpIcon /> : <TriangleDownIcon />}
       >
-        {method.name} {selected && (sortReverse ? "<" : ">")}
-      </button>
+        {method.name}
+      </Button>
     );
   });
 
@@ -44,28 +48,24 @@ function SeriesFilter({
     if (format.value !== "ANY" && !formatPresence(format.value)) return null;
     const selected = filterMethod === format.value;
     return (
-      <button
+      <Button
         key={format.value}
         name={format.value}
         onClick={filterBy}
-        {...(selected && { className: "inverse-btn" })}
+        variant={selected ? "solid" : "outline"}
       >
         {format.name}
-      </button>
+      </Button>
     );
   });
 
   return (
-    <HStack>
-      <div>
-        Sort:
-        {sortButtons}
-      </div>
-      <div>
-        Filter:
-        {filterButtons}
-      </div>
-    </HStack>
+    <VStack>
+      <ButtonGroup colorScheme="orange">{sortButtons}</ButtonGroup>
+      {!singleFormat && (
+        <ButtonGroup colorScheme="orange">{filterButtons}</ButtonGroup>
+      )}
+    </VStack>
   );
 }
 
