@@ -21,17 +21,12 @@ type Props = {
 
 function AddSessionView({ seriesItem, isOpen, onClose, addSession }: Props) {
   const setError = useContext(SetErrorContext);
-  const FORM_ID = "create-session-form";
   const { title, format } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
   const { saga, act, viewUrl } = lastSession;
 
-  // const noChange: boolean =
-  //   newSaga === saga && newAct === act && viewUrl === newViewUrl;
-
   const onSubmit = (values: FormikValues): void => {
-    // if (noChange) return;
     try {
       addSession(
         title,
@@ -49,16 +44,16 @@ function AddSessionView({ seriesItem, isOpen, onClose, addSession }: Props) {
     <ModalForm
       header="Update Series Progress"
       isOpen={isOpen}
-      onClose={onClose}
-      formId={FORM_ID}
+      handleClose={onClose}
     >
       <CreateSessionForm
-        formId={FORM_ID}
-        onSubmit={onSubmit}
+        handleSubmit={onSubmit}
         saga={saga}
         act={act}
         viewUrl={viewUrl}
         format={format}
+        handleCancel={onClose}
+        modalFooter={true}
       />
     </ModalForm>
   );

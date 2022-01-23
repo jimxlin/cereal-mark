@@ -22,7 +22,6 @@ type Props = {
 
 function AddSeriesView({ isOpen, onClose, addSeries, seriesExists }: Props) {
   const setError = useContext(SetErrorContext);
-  const FORM_ID = "create-series-form";
 
   const onSubmit = (values: FormikValues): void => {
     setError(undefined);
@@ -41,16 +40,12 @@ function AddSeriesView({ isOpen, onClose, addSeries, seriesExists }: Props) {
   };
 
   return (
-    <ModalForm
-      header="Add a Series"
-      isOpen={isOpen}
-      onClose={onClose}
-      formId={FORM_ID}
-    >
+    <ModalForm header="Add a Series" isOpen={isOpen} handleClose={onClose}>
       <CreateSeriesForm
-        formId={FORM_ID}
-        onSubmit={onSubmit}
+        handleSubmit={onSubmit}
         seriesExists={seriesExists}
+        handleCancel={onClose}
+        modalFooter={true}
       />
     </ModalForm>
   );

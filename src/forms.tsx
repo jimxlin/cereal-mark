@@ -1,7 +1,10 @@
 import { Formik, Form, useField, FormikValues } from "formik";
 import * as Yup from "yup";
 import {
+  HStack,
   VStack,
+  Button,
+  ModalFooter,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -79,15 +82,48 @@ const MySelectInput = (props: any): JSX.Element => {
   );
 };
 
+type SubmitButtonsProps = {
+  modalFooter: boolean;
+  disableSave: boolean;
+  handleCancel: () => void;
+};
+const SubmitButtons = ({
+  modalFooter,
+  disableSave,
+  handleCancel,
+}: SubmitButtonsProps) => {
+  return modalFooter ? (
+    <ModalFooter>
+      <Button mr={2} onClick={handleCancel}>
+        Cancel
+      </Button>
+      <Button type="submit" disabled={disableSave}>
+        Save
+      </Button>
+    </ModalFooter>
+  ) : (
+    <HStack>
+      <Button mr={2} onClick={handleCancel}>
+        Cancel
+      </Button>
+      <Button type="submit" disabled={disableSave}>
+        Save
+      </Button>
+    </HStack>
+  );
+};
+
 type CollectionNameFormProps = {
-  formId: string;
   initialName: string | undefined;
-  onSubmit: (values: FormikValues) => void;
+  handleSubmit: (values: FormikValues) => void;
+  modalFooter: boolean;
+  handleCancel: () => void;
 };
 export function CollectionNameForm({
-  formId,
   initialName,
-  onSubmit,
+  handleSubmit,
+  modalFooter,
+  handleCancel,
 }: CollectionNameFormProps) {
   return (
     <Formik
@@ -97,28 +133,38 @@ export function CollectionNameForm({
       validationSchema={Yup.object({
         collectionName: Yup.string().required("Required"),
       })}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
-      <Form id={formId}>
-        <MyTextInput
-          name="collectionName"
-          type="text"
-          placeholder="Unnamed Collection"
-        />
-      </Form>
+      {({ dirty }: { dirty: boolean }) => (
+        <Form>
+          <MyTextInput
+            name="collectionName"
+            type="text"
+            placeholder="Unnamed Collection"
+            autoComplete="off"
+          />
+          <SubmitButtons
+            modalFooter={modalFooter}
+            disableSave={!dirty}
+            handleCancel={handleCancel}
+          />
+        </Form>
+      )}
     </Formik>
   );
 }
 
 type CreateSeriesFormProps = {
-  formId: string;
-  onSubmit: (values: FormikValues) => void;
+  handleSubmit: (values: FormikValues) => void;
   seriesExists: (title: string | undefined) => boolean;
+  modalFooter: boolean;
+  handleCancel: () => void;
 };
 export function CreateSeriesForm({
-  formId,
-  onSubmit,
+  handleSubmit,
   seriesExists,
+  modalFooter,
+  handleCancel,
 }: CreateSeriesFormProps) {
   return (
     <Formik
@@ -147,11 +193,16 @@ export function CreateSeriesForm({
           .integer("Must be an integer"),
         viewUrl: Yup.string().url("Not a valid URL"),
       })}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
-      {({ values: { format } }: { values: { format: Format } }) => (
-        // provide `format` value so saga and act labels are dynamically rendered
-        <Form id={formId}>
+      {({
+        values: { format },
+        dirty,
+      }: {
+        values: { format: Format };
+        dirty: boolean;
+      }) => (
+        <Form>
           <VStack space={4}>
             <MyTextInput
               label="Title"
@@ -174,6 +225,11 @@ export function CreateSeriesForm({
               autoComplete="off"
             />
           </VStack>
+          <SubmitButtons
+            modalFooter={modalFooter}
+            disableSave={!dirty}
+            handleCancel={handleCancel}
+          />
         </Form>
       )}
     </Formik>
@@ -181,20 +237,22 @@ export function CreateSeriesForm({
 }
 
 type CreateSessionFormProps = {
-  formId: string;
-  onSubmit: (values: FormikValues) => void;
+  handleSubmit: (values: FormikValues) => void;
   saga: number | undefined;
   act: number;
   viewUrl: string | undefined;
   format: Format;
+  modalFooter: boolean;
+  handleCancel: () => void;
 };
 export function CreateSessionForm({
-  formId,
-  onSubmit,
+  handleSubmit,
   saga,
   act,
   viewUrl,
   format,
+  modalFooter,
+  handleCancel,
 }: CreateSessionFormProps) {
   return (
     <Formik
@@ -211,21 +269,28 @@ export function CreateSessionForm({
           .integer("Must be an integer"),
         viewUrl: Yup.string().url("Not a valid URL"),
       })}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
-      <Form id={formId}>
-        <VStack space={4}>
-          <MyNumberInput label={FORMAT[format].SAGA} name="saga" min="1" />
-          <MyNumberInput label={FORMAT[format].ACT} name="act" min="1" />
-          <MyTextInput
-            // TODO: move this input to a new EditSeries form
-            label="Link"
-            name="viewUrl"
-            type="url"
-            placeholder="https://example.com"
+      {({ dirty }: { dirty: boolean }) => (
+        <Form>
+          <VStack space={4}>
+            <MyNumberInput label={FORMAT[format].SAGA} name="saga" min="1" />
+            <MyNumberInput label={FORMAT[format].ACT} name="act" min="1" />
+            <MyTextInput
+              // TODO: move this input to a new EditSeries form
+              label="Link"
+              name="viewUrl"
+              type="url"
+              placeholder="https://example.com"
+            />
+          </VStack>
+          <SubmitButtons
+            modalFooter={modalFooter}
+            disableSave={!dirty}
+            handleCancel={handleCancel}
           />
-        </VStack>
-      </Form>
+        </Form>
+      )}
     </Formik>
   );
 }

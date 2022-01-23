@@ -19,10 +19,8 @@ function RenameCollectionView({
   updateCollectionName,
 }: Props) {
   const setError = useContext(SetErrorContext);
-  const FORM_ID = "collection-name-form";
 
   const onSubmit = (values: FormikValues): void => {
-    if (values.collectionName === collectionName) return;
     try {
       updateCollectionName(values.collectionName);
       onClose();
@@ -32,16 +30,12 @@ function RenameCollectionView({
   };
 
   return (
-    <ModalForm
-      header="Rename Collection"
-      isOpen={isOpen}
-      onClose={onClose}
-      formId={FORM_ID}
-    >
+    <ModalForm header="Rename Collection" isOpen={isOpen} handleClose={onClose}>
       <CollectionNameForm
-        formId={FORM_ID}
         initialName={collectionName}
-        onSubmit={onSubmit}
+        handleSubmit={onSubmit}
+        handleCancel={onClose}
+        modalFooter={true}
       />
     </ModalForm>
   );
