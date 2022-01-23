@@ -131,7 +131,7 @@ const demoData = {
       ],
     },
     {
-      title: "Strangers Of Dread",
+      title: "Strangers Of Dread And Darkness",
       format: "SHOW" as Format,
       archived: false,
       createdAtMs: 1513148196000,
@@ -241,7 +241,7 @@ const demoData = {
       ],
     },
     {
-      title: "Warriors In The Mountains",
+      title: "Warriors In The Mountains And The Valleys",
       format: "COMIC" as Format,
       archived: false,
       createdAtMs: 1546466765000,
@@ -288,7 +288,7 @@ const demoData = {
       ],
     },
     {
-      title: "Blacksmiths And Monks",
+      title: "Blacksmiths And Monks And Everything In Between And Then Some",
       format: "COMIC" as Format,
       archived: false,
       createdAtMs: 1593543145000,
@@ -299,6 +299,7 @@ const demoData = {
           createdAtMs: 1593543145000,
           saga: undefined,
           act: 2,
+          viewUrl: "https://example.com/",
         },
       ],
     },

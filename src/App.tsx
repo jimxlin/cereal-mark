@@ -193,7 +193,7 @@ function App() {
   };
 
   return (
-    <VStack w="100vw" ph={8}>
+    <VStack w="90vw" ph={8}>
       {demoMode && <DemoStatus />}
       {error && <ErrorView error={error} setError={setError} />}
       {isLoading && <LoadingView />}

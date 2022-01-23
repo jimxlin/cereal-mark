@@ -12,7 +12,6 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Item } from "framer-motion/types/components/Reorder/Item";
 
 type Props = {
   seriesItems: Array<SeriesItem>;

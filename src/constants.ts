@@ -22,14 +22,6 @@ export const FORMAT = {
   },
 };
 
-export const DATE_LOCALE = "en-US";
-
-export const DATE_OPTIONS: any = {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-};
-
 export const SORT = {
   RECENCY: "recency_sort",
   TITLE: "title_sort",
