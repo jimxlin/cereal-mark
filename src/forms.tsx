@@ -257,13 +257,11 @@ export function EditSeriesForm({
         viewUrl: seriesItem.viewUrl,
       }}
       validationSchema={Yup.object({
-        title: Yup.string()
-          .required("Required")
-          .test(
-            "title-exists",
-            "Title already exists",
-            (value) => !seriesExists(value, seriesItem.title)
-          ),
+        title: Yup.string().test(
+          "title-exists",
+          "Title already exists",
+          (value) => !seriesExists(value, seriesItem.title)
+        ),
         format: Yup.string()
           .required("Required")
           .matches(/^SHOW|COMIC|BOOK$/, "Not a valid format"),

@@ -1,11 +1,5 @@
-import {
-  HStack,
-  Heading,
-  Button,
-  IconButton,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { EditIcon, SettingsIcon } from "@chakra-ui/icons";
+import { HStack, Heading, IconButton, useDisclosure } from "@chakra-ui/react";
+import { SettingsIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
 import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
