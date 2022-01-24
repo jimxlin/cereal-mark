@@ -1,102 +1,61 @@
 import { useContext } from "react";
+import { FormikValues } from "formik";
+import { VStack, Text } from "@chakra-ui/react";
 import { Session, SeriesItem } from "../types";
-import { FORMAT, DEFAULT_ERROR, DATE_LOCALE, DATE_OPTIONS } from "../constants";
+import { DEFAULT_ERROR } from "../constants";
+import { toUndefined, humanDate } from "../helpers";
 import { SetErrorContext } from "../App";
-import { useInput } from "../hooks";
+import ModalForm from "./ModalForm";
+import { CreateSessionForm } from "../forms";
 
 type Props = {
   seriesItem: SeriesItem;
+  isOpen: boolean;
+  onClose: () => void;
   addSession: (
     seriesTitle: string,
     act: number,
-    saga: number | undefined,
-    viewUrl: string | undefined
+    saga: number | undefined
   ) => void;
-  clearAddSessionForm: () => void;
 };
 
-function AddSessionView({
-  seriesItem,
-  addSession,
-  clearAddSessionForm,
-}: Props) {
+function AddSessionView({ seriesItem, isOpen, onClose, addSession }: Props) {
   const setError = useContext(SetErrorContext);
-  const { title, format, updatedAtMs } = seriesItem;
+  const { title, format } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
-  const { saga, act, viewUrl } = lastSession;
+  const { saga, act, createdAtMs } = lastSession;
 
-  const [newSaga, bindNewSaga] = useInput(saga);
-  const [newAct, bindNewAct] = useInput(act);
-  const [newViewUrl, bindViewUrl] = useInput(viewUrl || "");
-
-  const noChange: boolean =
-    newSaga === saga && newAct === act && viewUrl === newViewUrl;
-
-  const saveSession = (): void => {
-    if (noChange) return;
+  const onSubmit = (values: FormikValues): void => {
     try {
-      addSession(
-        seriesItem.title,
-        Number(newAct),
-        newSaga ? Number(newSaga) : undefined,
-        newViewUrl && newViewUrl.length > 0
-          ? encodeURI(newViewUrl.trim())
-          : undefined
-      );
-      resetNewSession();
+      addSession(title, values.act, toUndefined(values.saga));
+      onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : DEFAULT_ERROR);
     }
   };
 
-  const resetNewSession = (): void => {
-    setError(undefined);
-    clearAddSessionForm();
-  };
-
   return (
-    <div className="form-container">
-      <h2>Update Progress</h2>
-      <h3>{title}</h3>
-      <div>
-        <i>
-          Last viewed on{" "}
-          {new Date(updatedAtMs).toLocaleString(DATE_LOCALE, DATE_OPTIONS)}
-        </i>
-      </div>
-      {saga && (
-        <div>
-          <label>
-            {FORMAT[format].SAGA}
-            <input type="number" min="1" {...bindNewSaga} />
-          </label>
-        </div>
-      )}
-      <div>
-        <label>
-          {FORMAT[format].ACT}
-          <input autoFocus type="number" min="1" {...bindNewAct} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Link
-          <input
-            type="url"
-            placeholder="https://example.com"
-            pattern="https://.*"
-            {...bindViewUrl}
-          />
-        </label>
-      </div>
-      <div>
-        <button onClick={saveSession} disabled={noChange}>
-          Save
-        </button>
-        <button onClick={resetNewSession}>Cancel</button>
-      </div>
-    </div>
+    <ModalForm
+      header="Update Series Progress"
+      isOpen={isOpen}
+      handleClose={onClose}
+    >
+      <VStack alignItems="left">
+        <Text fontSize="lg">{title}</Text>
+        <Text as="i" fontSize="xs" mb={4}>
+          Last viewed on {humanDate(createdAtMs)}
+        </Text>
+        <CreateSessionForm
+          handleSubmit={onSubmit}
+          saga={saga}
+          act={act}
+          format={format}
+          handleCancel={onClose}
+          modalFooter={true}
+        />
+      </VStack>
+    </ModalForm>
   );
 }
 

@@ -1,36 +1,41 @@
 import { useContext } from "react";
 import { FormikValues } from "formik";
-import { Format } from "../types";
+import { Format, SeriesItem } from "../types";
 import { DEFAULT_ERROR } from "../constants";
 import { toUndefined } from "../helpers";
 import { SetErrorContext } from "../App";
 import ModalForm from "./ModalForm";
-import { CreateSeriesForm } from "../forms";
+import { EditSeriesForm } from "../forms";
 
 type Props = {
+  seriesItem: SeriesItem;
   isOpen: boolean;
   onClose: () => void;
-  addSeries: (
+  editSeries: (
+    oldTitle: string,
     title: string,
     format: Format,
-    act: number,
-    saga: number | undefined,
     viewUrl: string | undefined
   ) => void;
   seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
 };
 
-function AddSeriesView({ isOpen, onClose, addSeries, seriesExists }: Props) {
+function EditSeriesView({
+  seriesItem,
+  isOpen,
+  onClose,
+  editSeries,
+  seriesExists,
+}: Props) {
   const setError = useContext(SetErrorContext);
 
   const onSubmit = (values: FormikValues): void => {
     setError(undefined);
     try {
-      addSeries(
+      editSeries(
+        seriesItem.title,
         values.title,
         values.format,
-        toUndefined(values.act),
-        values.saga,
         toUndefined(values.viewUrl)
       );
       onClose();
@@ -40,8 +45,9 @@ function AddSeriesView({ isOpen, onClose, addSeries, seriesExists }: Props) {
   };
 
   return (
-    <ModalForm header="Add a Series" isOpen={isOpen} handleClose={onClose}>
-      <CreateSeriesForm
+    <ModalForm header="Edit Series" isOpen={isOpen} handleClose={onClose}>
+      <EditSeriesForm
+        seriesItem={seriesItem}
         handleSubmit={onSubmit}
         seriesExists={seriesExists}
         handleCancel={onClose}
@@ -51,4 +57,4 @@ function AddSeriesView({ isOpen, onClose, addSeries, seriesExists }: Props) {
   );
 }
 
-export default AddSeriesView;
+export default EditSeriesView;

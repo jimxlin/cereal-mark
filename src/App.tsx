@@ -1,16 +1,14 @@
-import { useState, useEffect, useMemo, Fragment, createContext } from "react";
+import { useState, useEffect, useMemo, createContext } from "react";
+import { VStack, useToast } from "@chakra-ui/react";
 import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
-import { validUrl } from "./helpers";
 import demoData from "./demo-data";
-import "./App.css";
 import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Home from "./components/Home";
-import ErrorView from "./components/ErrorView";
 import LoadingView from "./components/LoadingView";
 
 export const SetErrorContext = createContext<any>(null);
@@ -61,7 +59,8 @@ function App() {
     }
     if (id === "demo") {
       setIsLoading(false);
-      enterDemoMode();
+      setDemoMode(true);
+      hydrateCollection(demoData);
       return;
     }
     // https://www.robinwieruch.de/react-hooks-fetch-data/
@@ -110,14 +109,31 @@ function App() {
     return () => window.removeEventListener("beforeunload", leavePageWarning);
   }, [changesSaved, collectionId, demoMode]);
 
-  const enterDemoMode = (): void => {
-    setDemoMode(true);
-    hydrateCollection(demoData);
-  };
+  const errorToast = useToast();
+  useEffect(() => {
+    if (!error) return;
+    errorToast({
+      position: "top",
+      description: error,
+      status: "error",
+      duration: 20000,
+      isClosable: true,
+    });
+  }, [error]);
 
   const updateCollectionName = (name: string): void => {
     setUpdatedAtMs(Date.now());
     setCollectionName(name);
+  };
+
+  // TODO: use context to reduce prop drilling
+  const seriesExists = (
+    title: string | undefined,
+    ownTitle?: string
+  ): boolean => {
+    if (!title) return true;
+    if (ownTitle && ownTitle === title) return false;
+    return Boolean(seriesItems?.some((item) => item.title === title));
   };
 
   const addSeries = (
@@ -133,14 +149,10 @@ function App() {
     if (existingSeries) {
       throw new Error("Cannot add series, title already exists");
     }
-    if (viewUrl && !validUrl(viewUrl)) {
-      throw new Error("Cannot add session, URL is invalid");
-    }
     setUpdatedAtMs(Date.now());
     const firstSession: Session = {
       saga,
       act,
-      viewUrl,
       createdAtMs: Date.now(),
     };
     setSeriesItems([
@@ -148,20 +160,49 @@ function App() {
       {
         title: title,
         sessions: [firstSession],
+        viewUrl: viewUrl,
         createdAtMs: Date.now(),
         updatedAtMs: Date.now(),
         archived: false,
         format: format,
-        tags: [],
       },
     ]);
+  };
+
+  const editSeries = (
+    oldTitle: string,
+    title: string,
+    format: Format,
+    viewUrl: string | undefined
+  ): void => {
+    const seriesToEdit = seriesItems?.some((item) => item.title === oldTitle);
+    if (!seriesItems || !seriesToEdit) {
+      throw new Error("Cannot find the series to edit");
+    }
+    const existingSeries = seriesItems?.some((item) => item.title === title);
+    if (oldTitle !== title && existingSeries) {
+      throw new Error("Cannot change series title, title already exists");
+    }
+    setUpdatedAtMs(Date.now());
+    setSeriesItems(
+      seriesItems.map((item) =>
+        item.title === oldTitle
+          ? {
+              ...item,
+              title,
+              format,
+              viewUrl,
+              updatedAtMs: Date.now(),
+            }
+          : item
+      )
+    );
   };
 
   const addSession = (
     seriesTitle: string,
     act: number,
-    saga: number | undefined,
-    viewUrl: string | undefined
+    saga: number | undefined
   ): void => {
     const seriesItem = seriesItems?.filter(
       (item) => item.title === seriesTitle
@@ -175,14 +216,10 @@ function App() {
     if (seriesItem.sessions.length === 0) {
       throw new Error("Cannot add session, missing first session");
     }
-    if (viewUrl && !validUrl(viewUrl)) {
-      throw new Error("Cannot add session, URL is invalid");
-    }
     setUpdatedAtMs(Date.now());
     const session: Session = {
       saga,
       act,
-      viewUrl,
       createdAtMs: Date.now(),
     };
     setSeriesItems(
@@ -199,27 +236,32 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <VStack w="90vw" ph={8}>
       {demoMode && <DemoStatus />}
-      {error && <ErrorView error={error} />}
       {isLoading && <LoadingView />}
       {!isLoading && (
         <SetErrorContext.Provider value={setError}>
           {seriesItems ? (
-            <Fragment>
+            <>
               <ManageCollection
                 addSeries={addSeries}
+                seriesExists={seriesExists}
                 collectionName={collectionName}
                 updateCollectionName={updateCollectionName}
               />
-              <SeriesList seriesItems={seriesItems} addSession={addSession} />
-            </Fragment>
+              <SeriesList
+                seriesItems={seriesItems}
+                seriesExists={seriesExists}
+                editSeries={editSeries}
+                addSession={addSession}
+              />
+            </>
           ) : (
             <Home setIsLoading={setIsLoading} />
           )}
         </SetErrorContext.Provider>
       )}
-    </div>
+    </VStack>
   );
 }
 

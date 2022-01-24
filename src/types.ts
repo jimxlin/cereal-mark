@@ -3,7 +3,6 @@ export type Format = "COMIC" | "SHOW" | "BOOK";
 export interface Session {
   saga?: number; // aka season, volume
   act: number; // aka chapter, episode
-  viewUrl?: string;
   createdAtMs: number;
 }
 
@@ -14,7 +13,7 @@ export interface SeriesItem {
   updatedAtMs: number;
   archived: boolean;
   format: Format;
-  tags: Array<string>;
+  viewUrl?: string;
 }
 
 export interface Collection {

@@ -1,4 +1,11 @@
-import { useState } from "react";
+import {
+  HStack,
+  Heading,
+  Button,
+  IconButton,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
 import AddSeriesView from "./AddSeriesView";
 import RenameCollectionView from "./RenameCollectionView";
@@ -13,51 +20,51 @@ type Props = {
     saga: number | undefined,
     viewUrl: string | undefined
   ) => void;
+  seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
 };
 
 function ManageCollection({
   addSeries,
   collectionName,
   updateCollectionName,
+  seriesExists,
 }: Props) {
-  const [showRename, setShowRename] = useState(false);
-  const [showAddSeries, setShowAddSeries] = useState(false);
-
-  const clearRenameCollectionForm = (): void => {
-    setShowRename(false);
-  };
-
-  const clearAddSeriesForm = (): void => {
-    setShowAddSeries(false);
-  };
+  const {
+    isOpen: isOpenCollectionNameForm,
+    onOpen: onOpenCollectionNameForm,
+    onClose: onCloseCollectionNameForm,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenCreateSeriesForm,
+    onOpen: onOpenCreateSeriesForm,
+    onClose: onCloseCreateSeriesForm,
+  } = useDisclosure();
 
   return (
     <div>
-      {showRename && (
-        <RenameCollectionView
-          collectionName={collectionName}
-          updateCollectionName={updateCollectionName}
-          clearRenameCollectionForm={clearRenameCollectionForm}
+      <RenameCollectionView
+        isOpen={isOpenCollectionNameForm}
+        onClose={onCloseCollectionNameForm}
+        collectionName={collectionName}
+        updateCollectionName={updateCollectionName}
+      />
+      <AddSeriesView
+        isOpen={isOpenCreateSeriesForm}
+        onClose={onCloseCreateSeriesForm}
+        addSeries={addSeries}
+        seriesExists={seriesExists}
+      />
+      <HStack>
+        <Heading>{collectionName || "Unnamed Collection"}</Heading>
+        <IconButton
+          aria-label="Rename collection"
+          icon={<EditIcon />}
+          onClick={onOpenCollectionNameForm}
         />
-      )}
-      {showAddSeries && (
-        <AddSeriesView
-          clearAddSeriesForm={clearAddSeriesForm}
-          addSeries={addSeries}
-        />
-      )}
-      <div>
-        <h2>{collectionName || "Unnamed Collection"}</h2>
-        <button onClick={() => setShowRename(true)}>Rename Collection</button>
-      </div>
-      <div>
-        <button
-          style={{ cursor: "pointer" }}
-          onClick={() => setShowAddSeries(true)}
-        >
+        <Button style={{ cursor: "pointer" }} onClick={onOpenCreateSeriesForm}>
           Add Series
-        </button>
-      </div>
+        </Button>
+      </HStack>
     </div>
   );
 }

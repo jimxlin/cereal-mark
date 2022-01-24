@@ -11,13 +11,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1506546369000,
       updatedAtMs: 1506546369000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1506546369000,
           saga: 1,
           act: 7,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -27,13 +26,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1510761554000,
       updatedAtMs: 1510761554000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1510761554000,
           saga: 1,
           act: 13,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -43,7 +41,6 @@ const demoData = {
       archived: false,
       createdAtMs: 1460503879000,
       updatedAtMs: 1460503879000,
-      tags: [],
       sessions: [
         {
           createdAtMs: 1460503879000,
@@ -58,13 +55,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1596340310000,
       updatedAtMs: 1596340310000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1596340310000,
           saga: 4,
           act: 21,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -74,7 +70,6 @@ const demoData = {
       archived: false,
       createdAtMs: 1405496020000,
       updatedAtMs: 1405496020000,
-      tags: [],
       sessions: [
         {
           createdAtMs: 1405496020000,
@@ -89,7 +84,6 @@ const demoData = {
       archived: false,
       createdAtMs: 1406252451000,
       updatedAtMs: 1406252451000,
-      tags: [],
       sessions: [
         {
           createdAtMs: 1406252451000,
@@ -104,13 +98,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1416849367000,
       updatedAtMs: 1416849367000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1416849367000,
           saga: undefined,
           act: 26,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -120,29 +113,27 @@ const demoData = {
       archived: false,
       createdAtMs: 1587831935000,
       updatedAtMs: 1587831935000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1587831935000,
           saga: 4,
           act: 9,
-          viewUrl: "https://example.com/",
         },
       ],
     },
     {
-      title: "Strangers Of Dread",
+      title: "Strangers Of Dread And Darkness",
       format: "SHOW" as Format,
       archived: false,
       createdAtMs: 1513148196000,
       updatedAtMs: 1513148196000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1513148196000,
           saga: 5,
           act: 22,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -152,7 +143,6 @@ const demoData = {
       archived: false,
       createdAtMs: 1555764127000,
       updatedAtMs: 1555764127000,
-      tags: [],
       sessions: [
         {
           createdAtMs: 1555764127000,
@@ -167,13 +157,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1540612306000,
       updatedAtMs: 1540612306000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1540612306000,
           saga: undefined,
           act: 7,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -183,13 +172,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1419513316000,
       updatedAtMs: 1419513316000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1419513316000,
           saga: 1,
           act: 11,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -199,13 +187,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1506627153000,
       updatedAtMs: 1506627153000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1506627153000,
           saga: undefined,
           act: 241,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -215,7 +202,6 @@ const demoData = {
       archived: false,
       createdAtMs: 1463288887000,
       updatedAtMs: 1463288887000,
-      tags: [],
       sessions: [
         {
           createdAtMs: 1463288887000,
@@ -230,29 +216,27 @@ const demoData = {
       archived: false,
       createdAtMs: 1519923742000,
       updatedAtMs: 1519923742000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1519923742000,
           saga: undefined,
           act: 139,
-          viewUrl: "https://example.com/",
         },
       ],
     },
     {
-      title: "Warriors In The Mountains",
+      title: "Warriors In The Mountains And The Valleys",
       format: "COMIC" as Format,
       archived: false,
       createdAtMs: 1546466765000,
       updatedAtMs: 1546466765000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1546466765000,
           saga: undefined,
           act: 74,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -262,13 +246,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1438182040000,
       updatedAtMs: 1438182040000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1438182040000,
           saga: undefined,
           act: 12,
-          viewUrl: "https://example.com/",
         },
       ],
     },
@@ -278,7 +261,6 @@ const demoData = {
       archived: false,
       createdAtMs: 1451183703000,
       updatedAtMs: 1451183703000,
-      tags: [],
       sessions: [
         {
           createdAtMs: 1451183703000,
@@ -288,12 +270,12 @@ const demoData = {
       ],
     },
     {
-      title: "Blacksmiths And Monks",
+      title: "Blacksmiths And Monks And Everything In Between And Then Some",
       format: "COMIC" as Format,
       archived: false,
       createdAtMs: 1593543145000,
       updatedAtMs: 1593543145000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1593543145000,
@@ -308,13 +290,12 @@ const demoData = {
       archived: false,
       createdAtMs: 1422560415000,
       updatedAtMs: 1422560415000,
-      tags: [],
+      viewUrl: "https://example.com/",
       sessions: [
         {
           createdAtMs: 1422560415000,
           saga: 13,
           act: 76,
-          viewUrl: "https://example.com/",
         },
       ],
     },

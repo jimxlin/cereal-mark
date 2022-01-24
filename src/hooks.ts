@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
+// TODO: remove this once all forms have been refactored
 export function useInput(initialValue: any) {
   const [value, setValue] = useState(initialValue);
   const bind = {
@@ -10,9 +11,8 @@ export function useInput(initialValue: any) {
       ),
     ...(typeof initialValue === "boolean" && { checked: value }),
   };
-  // const reset = (): void => setValue(initialValue);
-  // return [value, reset, bind];
-  return [value, bind];
+  const reset = (): void => setValue(initialValue);
+  return [value, reset, bind];
 }
 
 // https://overreacted.io/making-setinterval-declarative-with-react-hooks/

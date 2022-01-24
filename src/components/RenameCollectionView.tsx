@@ -1,56 +1,43 @@
 import { useContext } from "react";
-import { useInput } from "../hooks";
+import { FormikValues } from "formik";
 import { DEFAULT_ERROR } from "../constants";
 import { SetErrorContext } from "../App";
+import ModalForm from "./ModalForm";
+import { CollectionNameForm } from "../forms";
 
 type Props = {
   collectionName: string | undefined;
   updateCollectionName: (name: string) => void;
-  clearRenameCollectionForm: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
 function RenameCollectionView({
+  isOpen,
+  onClose,
   collectionName,
   updateCollectionName,
-  clearRenameCollectionForm,
 }: Props) {
   const setError = useContext(SetErrorContext);
-  const [newName, newNameBind] = useInput(collectionName || "");
 
-  const disallowedName: boolean =
-    newName.length === 0 || newName === collectionName;
-
-  const resetNewName = (): void => {
-    setError(undefined);
-    clearRenameCollectionForm();
-  };
-
-  const saveName = (): void => {
-    if (disallowedName) return;
+  const onSubmit = (values: FormikValues): void => {
     try {
-      updateCollectionName(newName);
-      resetNewName();
+      updateCollectionName(values.collectionName);
+      onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : DEFAULT_ERROR);
     }
   };
 
   return (
-    <div className="form-container">
-      <h2>Rename Collection</h2>
-      <div>
-        <label>
-          Collection Name
-          <input autoFocus type="text" {...newNameBind} />
-        </label>
-      </div>
-      <div>
-        <button disabled={disallowedName} onClick={saveName}>
-          Save
-        </button>
-        <button onClick={resetNewName}>Cancel</button>
-      </div>
-    </div>
+    <ModalForm header="Rename Collection" isOpen={isOpen} handleClose={onClose}>
+      <CollectionNameForm
+        initialName={collectionName}
+        handleSubmit={onSubmit}
+        handleCancel={onClose}
+        modalFooter={true}
+      />
+    </ModalForm>
   );
 }
 

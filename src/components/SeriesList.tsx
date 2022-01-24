@@ -1,26 +1,71 @@
 import { useState } from "react";
-import { SeriesItem } from "../types";
+import { VStack, useDisclosure } from "@chakra-ui/react";
+import { SeriesItem, Format } from "../types";
 import { SORT } from "../constants";
+import SeriesFilter from "./SeriesFilter";
 import SeriesView from "./SeriesView";
+import EditSeriesView from "./EditSeriesView";
 import AddSessionView from "./AddSessionView";
 
 type Props = {
   seriesItems: Array<SeriesItem>;
+  seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
+  editSeries: (
+    oldTitle: string,
+    title: string,
+    format: Format,
+    viewUrl: string | undefined
+  ) => void;
   addSession: (
     seriesTitle: string,
     act: number,
-    saga: number | undefined,
-    viewUrl: string | undefined
+    saga: number | undefined
   ) => void;
 };
 
-function SeriesList({ seriesItems, addSession }: Props) {
+function SeriesList({
+  seriesItems,
+  seriesExists,
+  editSeries,
+  addSession,
+}: Props) {
   const [filterMethod, setFilterMethod] = useState("ANY");
   const [sortMethod, setSortMethod] = useState(SORT.RECENCY);
   const [sortReverse, setSortReverse] = useState(false);
   const [seriesToUpdate, setSeriesToUpdate] = useState<SeriesItem | undefined>(
     undefined
   );
+  const [seriesToEdit, setSeriesToEdit] = useState<SeriesItem | undefined>(
+    undefined
+  );
+
+  const {
+    isOpen: isOpenEditSeriesForm,
+    onOpen: onOpenEditSeriesFormm,
+    onClose: onCloseEditSeriesForm,
+  } = useDisclosure();
+  const openSeriesFormModal = (seriesItem: SeriesItem): void => {
+    setSeriesToEdit(seriesItem);
+    onOpenEditSeriesFormm();
+  };
+  const closeSeriesFormModal = (): void => {
+    setSeriesToEdit(undefined);
+    onCloseEditSeriesForm();
+  };
+
+  const {
+    isOpen: isOpenCreateSessionForm,
+    onOpen: onOpenCreateSessionForm,
+    onClose: onCloseCreateSessionForm,
+  } = useDisclosure();
+  const openSessionFormModal = (seriesItem: SeriesItem): void => {
+    setSeriesToUpdate(seriesItem);
+    onOpenCreateSessionForm();
+  };
+  const closeSessionFormModal = (): void => {
+    setSeriesToUpdate(undefined);
+    onCloseCreateSessionForm();
+  };
 
   const filterItems = (items: Array<SeriesItem>): Array<SeriesItem> => {
     if (filterMethod === "ANY") return items;
@@ -48,7 +93,11 @@ function SeriesList({ seriesItems, addSession }: Props) {
 
   const sortBy = (e: React.MouseEvent<HTMLButtonElement>): void => {
     const method = (e.target as HTMLButtonElement).name;
-    if (method === sortMethod) setSortReverse(!sortReverse);
+    if (method === sortMethod) {
+      setSortReverse(!sortReverse);
+    } else {
+      setSortReverse(false);
+    }
     setSortMethod(method);
   };
 
@@ -57,77 +106,53 @@ function SeriesList({ seriesItems, addSession }: Props) {
     return sortItems(filterItems(seriesItems));
   };
 
-  const clearAddSessionForm = (): void => {
-    setSeriesToUpdate(undefined);
-  };
-
-  const formatPresence = (format: string) => {
+  const formatPresence = (format: string): boolean => {
     return seriesItems.some((item) => item.format === format);
   };
 
-  const sortButtons = [
-    { name: "Recency", value: SORT.RECENCY },
-    { name: "Title", value: SORT.TITLE },
-  ].map((method) => {
-    const selected = sortMethod === method.value;
-    return (
-      <button
-        key={method.value}
-        name={method.value}
-        onClick={sortBy}
-        {...(selected && { className: "inverse-btn" })}
-      >
-        {method.name} {selected && (sortReverse ? "<" : ">")}
-      </button>
-    );
-  });
-
-  const filterButtons = [
-    { name: "Any", value: "ANY" },
-    { name: "Shows", value: "SHOW" },
-    { name: "Comics", value: "COMIC" },
-    { name: "Books", value: "BOOK" },
-  ].map((format) => {
-    if (format.value !== "ANY" && !formatPresence(format.value)) return null;
-    const selected = filterMethod === format.value;
-    return (
-      <button
-        key={format.value}
-        name={format.value}
-        onClick={filterBy}
-        {...(selected && { className: "inverse-btn" })}
-      >
-        {format.name}
-      </button>
-    );
-  });
+  const singleFormat = seriesItems.every(
+    (item) => item.format === seriesItems[0].format
+  );
 
   return (
-    <div className="filters">
+    <VStack spacing={6}>
       {seriesToUpdate && (
         <AddSessionView
           seriesItem={seriesToUpdate}
           addSession={addSession}
-          clearAddSessionForm={clearAddSessionForm}
+          isOpen={isOpenCreateSessionForm}
+          onClose={closeSessionFormModal}
         />
       )}
-      <div>
-        Sort:
-        {sortButtons}
-      </div>
-      <div>
-        Filter:
-        {filterButtons}
-      </div>
-      <br />
-      {displayItems().map((item) => (
-        <SeriesView
-          key={item.title}
-          seriesItem={item}
-          setSeriesToUpdate={setSeriesToUpdate}
+      {seriesToEdit && (
+        <EditSeriesView
+          seriesItem={seriesToEdit}
+          editSeries={editSeries}
+          seriesExists={seriesExists}
+          isOpen={isOpenEditSeriesForm}
+          onClose={closeSeriesFormModal}
         />
-      ))}
-    </div>
+      )}
+      <SeriesFilter
+        formatPresence={formatPresence}
+        singleFormat={singleFormat}
+        filterMethod={filterMethod}
+        filterBy={filterBy}
+        sortMethod={sortMethod}
+        sortReverse={sortReverse}
+        sortBy={sortBy}
+      />
+      <VStack spacing={4}>
+        {displayItems().map((item) => (
+          <SeriesView
+            key={item.title}
+            seriesItem={item}
+            openSeriesForm={openSeriesFormModal}
+            openSessionForm={openSessionFormModal}
+          />
+        ))}
+      </VStack>
+    </VStack>
   );
 }
 
