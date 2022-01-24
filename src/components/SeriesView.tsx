@@ -15,14 +15,15 @@ import { humanDate } from "../helpers";
 
 type Props = {
   seriesItem: SeriesItem;
+  openSeriesForm: (seriesItem: SeriesItem) => void;
   openSessionForm: (seriesItem: SeriesItem) => void;
 };
 
-function SeriesView({ seriesItem, openSessionForm }: Props) {
-  const { title, format } = seriesItem;
+function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
+  const { title, format, viewUrl } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
-  const { saga, act, viewUrl } = lastSession;
+  const { saga, act } = lastSession;
 
   return (
     <Box
@@ -74,6 +75,7 @@ function SeriesView({ seriesItem, openSessionForm }: Props) {
             borderColor="gray.500"
             borderTopWidth="1px"
             borderRightWidth="1px"
+            onClick={() => openSeriesForm(seriesItem)}
           >
             <EditIcon />
           </Button>

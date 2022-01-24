@@ -1,42 +1,63 @@
 import { useState } from "react";
-import { VStack } from "@chakra-ui/react";
-import { SeriesItem } from "../types";
+import { VStack, useDisclosure } from "@chakra-ui/react";
+import { SeriesItem, Format } from "../types";
 import { SORT } from "../constants";
 import SeriesFilter from "./SeriesFilter";
 import SeriesView from "./SeriesView";
+import EditSeriesView from "./EditSeriesView";
 import AddSessionView from "./AddSessionView";
-import {
-  HStack,
-  Heading,
-  Button,
-  IconButton,
-  useDisclosure,
-} from "@chakra-ui/react";
 
 type Props = {
   seriesItems: Array<SeriesItem>;
+  seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
+  editSeries: (
+    oldTitle: string,
+    title: string,
+    format: Format,
+    viewUrl: string | undefined
+  ) => void;
   addSession: (
     seriesTitle: string,
     act: number,
-    saga: number | undefined,
-    viewUrl: string | undefined
+    saga: number | undefined
   ) => void;
 };
 
-function SeriesList({ seriesItems, addSession }: Props) {
+function SeriesList({
+  seriesItems,
+  seriesExists,
+  editSeries,
+  addSession,
+}: Props) {
   const [filterMethod, setFilterMethod] = useState("ANY");
   const [sortMethod, setSortMethod] = useState(SORT.RECENCY);
   const [sortReverse, setSortReverse] = useState(false);
   const [seriesToUpdate, setSeriesToUpdate] = useState<SeriesItem | undefined>(
     undefined
   );
+  const [seriesToEdit, setSeriesToEdit] = useState<SeriesItem | undefined>(
+    undefined
+  );
+
+  const {
+    isOpen: isOpenEditSeriesForm,
+    onOpen: onOpenEditSeriesFormm,
+    onClose: onCloseEditSeriesForm,
+  } = useDisclosure();
+  const openSeriesFormModal = (seriesItem: SeriesItem): void => {
+    setSeriesToEdit(seriesItem);
+    onOpenEditSeriesFormm();
+  };
+  const closeSeriesFormModal = (): void => {
+    setSeriesToEdit(undefined);
+    onCloseEditSeriesForm();
+  };
 
   const {
     isOpen: isOpenCreateSessionForm,
     onOpen: onOpenCreateSessionForm,
     onClose: onCloseCreateSessionForm,
   } = useDisclosure();
-
   const openSessionFormModal = (seriesItem: SeriesItem): void => {
     setSeriesToUpdate(seriesItem);
     onOpenCreateSessionForm();
@@ -94,13 +115,22 @@ function SeriesList({ seriesItems, addSession }: Props) {
   );
 
   return (
-    <VStack spacing={4}>
+    <VStack spacing={6}>
       {seriesToUpdate && (
         <AddSessionView
           seriesItem={seriesToUpdate}
           addSession={addSession}
           isOpen={isOpenCreateSessionForm}
           onClose={closeSessionFormModal}
+        />
+      )}
+      {seriesToEdit && (
+        <EditSeriesView
+          seriesItem={seriesToEdit}
+          editSeries={editSeries}
+          seriesExists={seriesExists}
+          isOpen={isOpenEditSeriesForm}
+          onClose={closeSeriesFormModal}
         />
       )}
       <SeriesFilter
@@ -112,13 +142,16 @@ function SeriesList({ seriesItems, addSession }: Props) {
         sortReverse={sortReverse}
         sortBy={sortBy}
       />
-      {displayItems().map((item) => (
-        <SeriesView
-          key={item.title}
-          seriesItem={item}
-          openSessionForm={openSessionFormModal}
-        />
-      ))}
+      <VStack spacing={4}>
+        {displayItems().map((item) => (
+          <SeriesView
+            key={item.title}
+            seriesItem={item}
+            openSeriesForm={openSeriesFormModal}
+            openSessionForm={openSessionFormModal}
+          />
+        ))}
+      </VStack>
     </VStack>
   );
 }

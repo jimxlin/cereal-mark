@@ -20,7 +20,7 @@ type Props = {
     saga: number | undefined,
     viewUrl: string | undefined
   ) => void;
-  seriesExists: (title: string | undefined) => boolean;
+  seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
 };
 
 function ManageCollection({

@@ -1,10 +1,11 @@
 import { Formik, Form, useField, FormikValues } from "formik";
 import * as Yup from "yup";
 import {
+  Flex,
   HStack,
   VStack,
+  Spacer,
   Button,
-  ModalFooter,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -18,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { FORMAT } from "./constants";
-import { Format } from "./types";
+import { Format, SeriesItem } from "./types";
 
 // https://formik.org/docs/tutorial
 
@@ -26,10 +27,8 @@ const MyTextInput = (props: any): JSX.Element => {
   const [field, meta] = useField(props);
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>
-        {props.label}
-        <Input {...field} {...props} />
-      </FormLabel>
+      <FormLabel as="legend">{props.label}</FormLabel>
+      <Input {...field} {...props} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   );
@@ -39,31 +38,29 @@ const MyNumberInput = (props: any): JSX.Element => {
   const [field, meta, helpers] = useField(props);
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>
-        {props.label}
-        <NumberInput
-          {...field}
-          {...props}
-          // workaround for Formik and NumberInput integration
-          // https://github.com/chakra-ui/chakra-ui/issues/617
-          // https://stackoverflow.com/a/68085645
-          /* eslint-disable no-unused-vars */
-          onChange={(valueAsString, valueAsNumber) =>
-            helpers.setValue(valueAsString)
-          }
-          /* eslint-enable no-unused-vars */
-        >
-          <NumberInputField />
-          <NumberInputStepper w="50%" flexDirection="row">
-            <NumberDecrementStepper>
-              <MinusIcon />
-            </NumberDecrementStepper>
-            <NumberIncrementStepper>
-              <AddIcon />
-            </NumberIncrementStepper>
-          </NumberInputStepper>
-        </NumberInput>
-      </FormLabel>
+      <FormLabel as="legend">{props.label}</FormLabel>
+      <NumberInput
+        {...field}
+        {...props}
+        // workaround for Formik and NumberInput integration
+        // https://github.com/chakra-ui/chakra-ui/issues/617
+        // https://stackoverflow.com/a/68085645
+        /* eslint-disable no-unused-vars */
+        onChange={(valueAsString, valueAsNumber) =>
+          helpers.setValue(valueAsString)
+        }
+        /* eslint-enable no-unused-vars */
+      >
+        <NumberInputField />
+        <NumberInputStepper w="50%" flexDirection="row">
+          <NumberDecrementStepper>
+            <MinusIcon />
+          </NumberDecrementStepper>
+          <NumberIncrementStepper>
+            <AddIcon />
+          </NumberIncrementStepper>
+        </NumberInputStepper>
+      </NumberInput>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   );
@@ -73,11 +70,9 @@ const MySelectInput = (props: any): JSX.Element => {
   const [field, meta] = useField(props);
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>
-        {props.label}
-        <Select {...field} {...props} />
-        <FormErrorMessage>{meta.error}</FormErrorMessage>
-      </FormLabel>
+      <FormLabel as="legend">{props.label}</FormLabel>
+      <Select {...field} {...props} />
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   );
 };
@@ -93,14 +88,16 @@ const SubmitButtons = ({
   handleCancel,
 }: SubmitButtonsProps) => {
   return modalFooter ? (
-    <ModalFooter>
+    // spacing workaround for nesting footer inside modalBody
+    <Flex w="100%" pt={4} pb={2}>
+      <Spacer />
       <Button mr={2} onClick={handleCancel}>
         Cancel
       </Button>
       <Button type="submit" disabled={disableSave}>
         Save
       </Button>
-    </ModalFooter>
+    </Flex>
   ) : (
     <HStack>
       <Button mr={2} onClick={handleCancel}>
@@ -156,7 +153,7 @@ export function CollectionNameForm({
 
 type CreateSeriesFormProps = {
   handleSubmit: (values: FormikValues) => void;
-  seriesExists: (title: string | undefined) => boolean;
+  seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
   modalFooter: boolean;
   handleCancel: () => void;
 };
@@ -203,7 +200,7 @@ export function CreateSeriesForm({
         dirty: boolean;
       }) => (
         <Form>
-          <VStack space={4}>
+          <VStack spacing={4}>
             <MyTextInput
               label="Title"
               name="title"
@@ -236,11 +233,89 @@ export function CreateSeriesForm({
   );
 }
 
+type EditSeriesFormProps = {
+  seriesItem: SeriesItem;
+  handleSubmit: (values: FormikValues) => void;
+  seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
+  modalFooter: boolean;
+  handleCancel: () => void;
+};
+export function EditSeriesForm({
+  seriesItem,
+  handleSubmit,
+  seriesExists,
+  modalFooter,
+  handleCancel,
+}: EditSeriesFormProps) {
+  return (
+    <Formik
+      initialValues={{
+        title: seriesItem.title,
+        format: seriesItem.format,
+        viewUrl: seriesItem.viewUrl,
+      }}
+      validationSchema={Yup.object({
+        title: Yup.string()
+          .required("Required")
+          .test(
+            "title-exists",
+            "Title already exists",
+            (value) => !seriesExists(value, seriesItem.title)
+          ),
+        format: Yup.string()
+          .required("Required")
+          .matches(/^SHOW|COMIC|BOOK$/, "Not a valid format"),
+        viewUrl: Yup.string().url("Not a valid URL"),
+      })}
+      onSubmit={handleSubmit}
+    >
+      {({ dirty }: { dirty: boolean }) => (
+        <Form>
+          <VStack spacing={4}>
+            <MyTextInput
+              label="Title"
+              name="title"
+              type="text"
+              autoComplete="off"
+            />
+            <MySelectInput label="Format" name="format">
+              <option value="SHOW">{FORMAT.SHOW.NAME}</option>
+              <option value="COMIC">{FORMAT.COMIC.NAME}</option>
+              <option value="BOOK">{FORMAT.BOOK.NAME}</option>
+            </MySelectInput>
+            {/* TODO
+              <MyCheckboxInput
+                label="Archived"
+                name="archived"
+              />
+              <MyCheckboxInput
+                label="Complete"
+                name="complete"
+              />
+             */}
+            <MyTextInput
+              label="Link"
+              name="viewUrl"
+              type="url"
+              placeholder="https://example.com"
+              autoComplete="off"
+            />
+          </VStack>
+          <SubmitButtons
+            modalFooter={modalFooter}
+            disableSave={!dirty}
+            handleCancel={handleCancel}
+          />
+        </Form>
+      )}
+    </Formik>
+  );
+}
+
 type CreateSessionFormProps = {
   handleSubmit: (values: FormikValues) => void;
   saga: number | undefined;
   act: number;
-  viewUrl: string | undefined;
   format: Format;
   modalFooter: boolean;
   handleCancel: () => void;
@@ -249,7 +324,6 @@ export function CreateSessionForm({
   handleSubmit,
   saga,
   act,
-  viewUrl,
   format,
   modalFooter,
   handleCancel,
@@ -259,7 +333,6 @@ export function CreateSessionForm({
       initialValues={{
         saga: saga,
         act: act,
-        viewUrl: viewUrl,
       }}
       validationSchema={Yup.object({
         saga: Yup.number().min(1).integer("Must be an integer"),
@@ -273,16 +346,9 @@ export function CreateSessionForm({
     >
       {({ dirty }: { dirty: boolean }) => (
         <Form>
-          <VStack space={4}>
+          <VStack spacing={4}>
             <MyNumberInput label={FORMAT[format].SAGA} name="saga" min="1" />
             <MyNumberInput label={FORMAT[format].ACT} name="act" min="1" />
-            <MyTextInput
-              // TODO: move this input to a new EditSeries form
-              label="Link"
-              name="viewUrl"
-              type="url"
-              placeholder="https://example.com"
-            />
           </VStack>
           <SubmitButtons
             modalFooter={modalFooter}

@@ -126,8 +126,13 @@ function App() {
     setCollectionName(name);
   };
 
-  const seriesExists = (title: string | undefined): boolean => {
+  // TODO: use context to reduce prop drilling
+  const seriesExists = (
+    title: string | undefined,
+    ownTitle?: string
+  ): boolean => {
     if (!title) return true;
+    if (ownTitle && ownTitle === title) return false;
     return Boolean(seriesItems?.some((item) => item.title === title));
   };
 
@@ -148,7 +153,6 @@ function App() {
     const firstSession: Session = {
       saga,
       act,
-      viewUrl,
       createdAtMs: Date.now(),
     };
     setSeriesItems([
@@ -156,20 +160,49 @@ function App() {
       {
         title: title,
         sessions: [firstSession],
+        viewUrl: viewUrl,
         createdAtMs: Date.now(),
         updatedAtMs: Date.now(),
         archived: false,
         format: format,
-        tags: [],
       },
     ]);
+  };
+
+  const editSeries = (
+    oldTitle: string,
+    title: string,
+    format: Format,
+    viewUrl: string | undefined
+  ): void => {
+    const seriesToEdit = seriesItems?.some((item) => item.title === oldTitle);
+    if (!seriesItems || !seriesToEdit) {
+      throw new Error("Cannot find the series to edit");
+    }
+    const existingSeries = seriesItems?.some((item) => item.title === title);
+    if (oldTitle !== title && existingSeries) {
+      throw new Error("Cannot change series title, title already exists");
+    }
+    setUpdatedAtMs(Date.now());
+    setSeriesItems(
+      seriesItems.map((item) =>
+        item.title === oldTitle
+          ? {
+              ...item,
+              title,
+              format,
+              viewUrl,
+              updatedAtMs: Date.now(),
+            }
+          : item
+      )
+    );
   };
 
   const addSession = (
     seriesTitle: string,
     act: number,
-    saga: number | undefined,
-    viewUrl: string | undefined
+    saga: number | undefined
   ): void => {
     const seriesItem = seriesItems?.filter(
       (item) => item.title === seriesTitle
@@ -187,7 +220,6 @@ function App() {
     const session: Session = {
       saga,
       act,
-      viewUrl,
       createdAtMs: Date.now(),
     };
     setSeriesItems(
@@ -217,7 +249,12 @@ function App() {
                 collectionName={collectionName}
                 updateCollectionName={updateCollectionName}
               />
-              <SeriesList seriesItems={seriesItems} addSession={addSession} />
+              <SeriesList
+                seriesItems={seriesItems}
+                seriesExists={seriesExists}
+                editSeries={editSeries}
+                addSession={addSession}
+              />
             </>
           ) : (
             <Home setIsLoading={setIsLoading} />
