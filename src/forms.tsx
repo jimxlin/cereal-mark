@@ -23,6 +23,8 @@ import { Format, SeriesItem } from "./types";
 
 // https://formik.org/docs/tutorial
 
+// TODO: consider another form framework https://react-hook-form.com/faqs/#ReactHookFormFormikorReduxForm
+
 const MyTextInput = (props: any): JSX.Element => {
   const [field, meta] = useField(props);
   return (
@@ -255,13 +257,11 @@ export function EditSeriesForm({
         viewUrl: seriesItem.viewUrl,
       }}
       validationSchema={Yup.object({
-        title: Yup.string()
-          .required("Required")
-          .test(
-            "title-exists",
-            "Title already exists",
-            (value) => !seriesExists(value, seriesItem.title)
-          ),
+        title: Yup.string().test(
+          "title-exists",
+          "Title already exists",
+          (value) => !seriesExists(value, seriesItem.title)
+        ),
         format: Yup.string()
           .required("Required")
           .matches(/^SHOW|COMIC|BOOK$/, "Not a valid format"),

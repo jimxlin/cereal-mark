@@ -236,13 +236,13 @@ function App() {
   };
 
   return (
-    <VStack w="100vw">
+    <VStack w="100vw" spacing={0}>
       {demoMode && <DemoStatus />}
       {isLoading && <LoadingView />}
       {!isLoading && (
         <SetErrorContext.Provider value={setError}>
           {seriesItems ? (
-            <>
+            <VStack w="lg">
               <ManageCollection
                 addSeries={addSeries}
                 seriesExists={seriesExists}
@@ -255,7 +255,7 @@ function App() {
                 editSeries={editSeries}
                 addSession={addSession}
               />
-            </>
+            </VStack>
           ) : (
             <Home setIsLoading={setIsLoading} />
           )}

@@ -1,12 +1,14 @@
 import {
+  Flex,
   HStack,
-  Heading,
-  Button,
+  Spacer,
   IconButton,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
+import { MoonIcon, LinkIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
+import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
 import RenameCollectionView from "./RenameCollectionView";
 
@@ -40,8 +42,40 @@ function ManageCollection({
     onClose: onCloseCreateSeriesForm,
   } = useDisclosure();
 
+  const copiedToast = useToast();
+
+  const copyUrl = (): void => {
+    navigator.clipboard.writeText(window.location.href);
+    copiedToast({
+      position: "top",
+      description: "Copied URL to Clipboard",
+      status: "success",
+      duration: 2000,
+    });
+  };
+
   return (
-    <div>
+    <Flex w="lg" mt={4}>
+      <CollectionMenu
+        menuName={collectionName || "Unnamed Collection"}
+        handleOpenCollectionNameForm={onOpenCollectionNameForm}
+        handleOpenCreateSeriesForm={onOpenCreateSeriesForm}
+      />
+      <Spacer />
+      <HStack>
+        <IconButton
+          onClick={copyUrl}
+          aria-label="Copy URL"
+          colorScheme="blue"
+          icon={<LinkIcon />}
+        />
+        {/* TODO: darkmode */}
+        <IconButton
+          aria-label="Dark mode"
+          colorScheme="blue"
+          icon={<MoonIcon />}
+        />
+      </HStack>
       <RenameCollectionView
         isOpen={isOpenCollectionNameForm}
         onClose={onCloseCollectionNameForm}
@@ -54,18 +88,7 @@ function ManageCollection({
         addSeries={addSeries}
         seriesExists={seriesExists}
       />
-      <HStack>
-        <Heading>{collectionName || "Unnamed Collection"}</Heading>
-        <IconButton
-          aria-label="Rename collection"
-          icon={<EditIcon />}
-          onClick={onOpenCollectionNameForm}
-        />
-        <Button style={{ cursor: "pointer" }} onClick={onOpenCreateSeriesForm}>
-          Add Series
-        </Button>
-      </HStack>
-    </div>
+    </Flex>
   );
 }
 

@@ -72,8 +72,7 @@ function SeriesList({
     return items.filter((item) => item.format === filterMethod);
   };
 
-  const filterBy = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    const method = (e.target as HTMLButtonElement).name;
+  const filterBy = (method: string): void => {
     setFilterMethod(method);
   };
 
@@ -91,8 +90,7 @@ function SeriesList({
     return sortReverse ? sorted.reverse() : sorted;
   };
 
-  const sortBy = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    const method = (e.target as HTMLButtonElement).name;
+  const sortBy = (method: string): void => {
     if (method === sortMethod) {
       setSortReverse(!sortReverse);
     } else {
@@ -115,7 +113,7 @@ function SeriesList({
   );
 
   return (
-    <VStack spacing={6}>
+    <VStack spacing={6} w="100%" alignItems="left">
       {seriesToUpdate && (
         <AddSessionView
           seriesItem={seriesToUpdate}

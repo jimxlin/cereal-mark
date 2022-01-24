@@ -1,8 +1,10 @@
+import { Center, Image } from "@chakra-ui/react";
+
 function LoadingView() {
   return (
-    <div style={{ width: "100vw", textAlign: "center", marginTop: "5rem" }}>
-      <img src="/spinner.gif" alt="Loading spinner" />
-    </div>
+    <Center mt={20} w="100vw">
+      <Image src="/spinner.gif" alt="Loading spinner" />
+    </Center>
   );
 }
 

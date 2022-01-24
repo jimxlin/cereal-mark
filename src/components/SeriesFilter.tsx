@@ -5,10 +5,10 @@ import { SORT } from "../constants";
 type Props = {
   filterMethod: string;
   singleFormat: boolean;
-  filterBy: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  filterBy: (method: string) => void;
   sortMethod: string;
   sortReverse: boolean;
-  sortBy: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  sortBy: (method: string) => void;
   formatPresence: (format: string) => boolean;
 };
 
@@ -29,8 +29,7 @@ function SeriesFilter({
     return (
       <Button
         key={method.value}
-        name={method.value}
-        onClick={sortBy}
+        onClick={() => sortBy(method.value)}
         variant={selected ? "solid" : "outline"}
         rightIcon={sortReverse ? <TriangleUpIcon /> : <TriangleDownIcon />}
       >
@@ -50,8 +49,7 @@ function SeriesFilter({
     return (
       <Button
         key={format.value}
-        name={format.value}
-        onClick={filterBy}
+        onClick={() => filterBy(format.value)}
         variant={selected ? "solid" : "outline"}
       >
         {format.name}
@@ -60,7 +58,7 @@ function SeriesFilter({
   });
 
   return (
-    <VStack>
+    <VStack alignItems="left">
       <ButtonGroup colorScheme="orange">{sortButtons}</ButtonGroup>
       {!singleFormat && (
         <ButtonGroup colorScheme="orange">{filterButtons}</ButtonGroup>

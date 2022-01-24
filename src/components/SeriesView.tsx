@@ -27,7 +27,8 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
 
   return (
     <Box
-      w="512px"
+      w="lg"
+      bg="yellow.50"
       borderWidth="1px"
       borderRadius="lg"
       borderColor="gray.500"
