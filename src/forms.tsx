@@ -23,6 +23,8 @@ import { Format, SeriesItem } from "./types";
 
 // https://formik.org/docs/tutorial
 
+// TODO: consider another form framework https://react-hook-form.com/faqs/#ReactHookFormFormikorReduxForm
+
 const MyTextInput = (props: any): JSX.Element => {
   const [field, meta] = useField(props);
   return (

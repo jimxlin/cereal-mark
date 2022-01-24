@@ -5,8 +5,9 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
+import { EditIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
+import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
 import RenameCollectionView from "./RenameCollectionView";
 
@@ -30,6 +31,11 @@ function ManageCollection({
   seriesExists,
 }: Props) {
   const {
+    isOpen: isOpenCollectionMenu,
+    onOpen: onOpenCollectionMenu,
+    onClose: onCloseCollectionMenu,
+  } = useDisclosure();
+  const {
     isOpen: isOpenCollectionNameForm,
     onOpen: onOpenCollectionNameForm,
     onClose: onCloseCollectionNameForm,
@@ -42,6 +48,12 @@ function ManageCollection({
 
   return (
     <div>
+      <CollectionMenu
+        isOpen={isOpenCollectionMenu}
+        onClose={onCloseCollectionMenu}
+        handleOpenCollectionNameForm={onOpenCollectionNameForm}
+        handleOpenCreateSeriesForm={onOpenCreateSeriesForm}
+      />
       <RenameCollectionView
         isOpen={isOpenCollectionNameForm}
         onClose={onCloseCollectionNameForm}
@@ -57,13 +69,10 @@ function ManageCollection({
       <HStack>
         <Heading>{collectionName || "Unnamed Collection"}</Heading>
         <IconButton
-          aria-label="Rename collection"
-          icon={<EditIcon />}
-          onClick={onOpenCollectionNameForm}
+          aria-label="Collection settings"
+          icon={<SettingsIcon />}
+          onClick={onOpenCollectionMenu}
         />
-        <Button style={{ cursor: "pointer" }} onClick={onOpenCreateSeriesForm}>
-          Add Series
-        </Button>
       </HStack>
     </div>
   );
