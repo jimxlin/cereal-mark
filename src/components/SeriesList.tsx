@@ -113,7 +113,7 @@ function SeriesList({
   );
 
   return (
-    <VStack spacing={6}>
+    <VStack spacing={6} w="100%" alignItems="left">
       {seriesToUpdate && (
         <AddSessionView
           seriesItem={seriesToUpdate}

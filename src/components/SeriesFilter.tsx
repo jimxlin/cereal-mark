@@ -58,7 +58,7 @@ function SeriesFilter({
   });
 
   return (
-    <VStack>
+    <VStack alignItems="left">
       <ButtonGroup colorScheme="orange">{sortButtons}</ButtonGroup>
       {!singleFormat && (
         <ButtonGroup colorScheme="orange">{filterButtons}</ButtonGroup>

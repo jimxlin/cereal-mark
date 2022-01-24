@@ -1,5 +1,12 @@
-import { HStack, Heading, IconButton, useDisclosure } from "@chakra-ui/react";
-import { SettingsIcon } from "@chakra-ui/icons";
+import {
+  Flex,
+  HStack,
+  Spacer,
+  IconButton,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { MoonIcon, LinkIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
 import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
@@ -25,11 +32,6 @@ function ManageCollection({
   seriesExists,
 }: Props) {
   const {
-    isOpen: isOpenCollectionMenu,
-    onOpen: onOpenCollectionMenu,
-    onClose: onCloseCollectionMenu,
-  } = useDisclosure();
-  const {
     isOpen: isOpenCollectionNameForm,
     onOpen: onOpenCollectionNameForm,
     onClose: onCloseCollectionNameForm,
@@ -40,14 +42,40 @@ function ManageCollection({
     onClose: onCloseCreateSeriesForm,
   } = useDisclosure();
 
+  const copiedToast = useToast();
+
+  const copyUrl = (): void => {
+    navigator.clipboard.writeText(window.location.href);
+    copiedToast({
+      position: "top",
+      description: "Copied URL to Clipboard",
+      status: "success",
+      duration: 2000,
+    });
+  };
+
   return (
-    <div>
+    <Flex w="lg" mt={4}>
       <CollectionMenu
-        isOpen={isOpenCollectionMenu}
-        onClose={onCloseCollectionMenu}
+        menuName={collectionName || "Unnamed Collection"}
         handleOpenCollectionNameForm={onOpenCollectionNameForm}
         handleOpenCreateSeriesForm={onOpenCreateSeriesForm}
       />
+      <Spacer />
+      <HStack>
+        <IconButton
+          onClick={copyUrl}
+          aria-label="Copy URL"
+          colorScheme="blue"
+          icon={<LinkIcon />}
+        />
+        {/* TODO: darkmode */}
+        <IconButton
+          aria-label="Dark mode"
+          colorScheme="blue"
+          icon={<MoonIcon />}
+        />
+      </HStack>
       <RenameCollectionView
         isOpen={isOpenCollectionNameForm}
         onClose={onCloseCollectionNameForm}
@@ -60,15 +88,7 @@ function ManageCollection({
         addSeries={addSeries}
         seriesExists={seriesExists}
       />
-      <HStack>
-        <Heading>{collectionName || "Unnamed Collection"}</Heading>
-        <IconButton
-          aria-label="Collection settings"
-          icon={<SettingsIcon />}
-          onClick={onOpenCollectionMenu}
-        />
-      </HStack>
-    </div>
+    </Flex>
   );
 }
 
