@@ -119,7 +119,7 @@ function App() {
       duration: 20000,
       isClosable: true,
     });
-  }, [error]);
+  }, [error, errorToast]);
 
   const updateCollectionName = (name: string): void => {
     setUpdatedAtMs(Date.now());
@@ -236,7 +236,7 @@ function App() {
   };
 
   return (
-    <VStack w="90vw" ph={8}>
+    <VStack w="100vw">
       {demoMode && <DemoStatus />}
       {isLoading && <LoadingView />}
       {!isLoading && (

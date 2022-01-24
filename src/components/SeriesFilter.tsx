@@ -1,4 +1,4 @@
-import { VStack, HStack, Button, ButtonGroup } from "@chakra-ui/react";
+import { VStack, Button, ButtonGroup } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { SORT } from "../constants";
 
