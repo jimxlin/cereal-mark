@@ -47,10 +47,14 @@ function Home({ setIsLoading }: Props) {
         CerealMark is a tool to keep track of series that you are following.
         Once you've created your page, bookmark it to access it anytime.
       </Text>
-      <Button w="sm" colorScheme="blue" onClick={initializeCollection}>
+      <Button
+        w={["100%", "sm"]}
+        colorScheme="blue"
+        onClick={initializeCollection}
+      >
         Get Started
       </Button>
-      <Button w="sm" colorScheme="blue" as="a" href="/demo">
+      <Button w={["100%", "sm"]} colorScheme="blue" as="a" href="/demo">
         Try the Demo
       </Button>
     </VStack>
