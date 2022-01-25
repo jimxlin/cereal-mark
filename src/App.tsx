@@ -237,7 +237,7 @@ function App() {
   };
 
   return (
-    <VStack w="100%" spacing={6}>
+    <VStack w="100%" spacing={[2, 6]}>
       <Header demoMode={demoMode} />
       {isLoading && <LoadingView />}
       <VStack minH="80vh" w={["100%", "md", "lg"]} px={[2, 2, 0]}>
