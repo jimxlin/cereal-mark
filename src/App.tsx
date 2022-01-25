@@ -165,9 +165,11 @@ function App() {
         title: title,
         sessions: [firstSession],
         viewUrl: viewUrl,
+        favorite: false,
+        archived: false,
+        complete: false,
         createdAtMs: Date.now(),
         updatedAtMs: Date.now(),
-        archived: false,
         format: format,
       },
     ]);
@@ -177,7 +179,10 @@ function App() {
     oldTitle: string,
     title: string,
     format: Format,
-    viewUrl: string | undefined
+    viewUrl: string | undefined,
+    archived: boolean,
+    complete: boolean,
+    favorite: boolean
   ): void => {
     const seriesToEdit = seriesItems?.some((item) => item.title === oldTitle);
     if (!seriesItems || !seriesToEdit) {
@@ -196,6 +201,9 @@ function App() {
               title,
               format,
               viewUrl,
+              archived,
+              complete,
+              favorite,
               updatedAtMs: Date.now(),
             }
           : item

@@ -15,7 +15,10 @@ type Props = {
     oldTitle: string,
     title: string,
     format: Format,
-    viewUrl: string | undefined
+    viewUrl: string | undefined,
+    archived: boolean,
+    complete: boolean,
+    favorite: boolean
   ) => void;
   seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
 };
@@ -36,7 +39,10 @@ function EditSeriesView({
         seriesItem.title,
         values.title,
         values.format,
-        toUndefined(values.viewUrl)
+        toUndefined(values.viewUrl),
+        values.archived,
+        values.complete,
+        values.favorite
       );
       onClose();
     } catch (err) {

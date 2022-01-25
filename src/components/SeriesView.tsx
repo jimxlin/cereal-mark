@@ -74,6 +74,7 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
             borderRadius="0"
             borderBottomRightRadius="lg"
             borderTopWidth="1px"
+            disabled={seriesItem.archived || seriesItem.complete}
             onClick={() => openSessionForm(seriesItem)}
           >
             <AddIcon />

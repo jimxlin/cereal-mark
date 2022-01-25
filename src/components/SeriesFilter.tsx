@@ -10,10 +10,12 @@ type Props = {
   sortReverse: boolean;
   sortBy: (method: string) => void;
   formatPresence: (format: string) => boolean;
+  propertyPresence: (key: string) => boolean;
 };
 
 function SeriesFilter({
   formatPresence,
+  propertyPresence,
   singleFormat,
   filterMethod,
   filterBy,
@@ -38,7 +40,7 @@ function SeriesFilter({
     );
   });
 
-  const filterButtons = [
+  const formatFilterButtons = [
     { name: "Any", value: "ANY" },
     { name: "Shows", value: "SHOW" },
     { name: "Comics", value: "COMIC" },
@@ -47,13 +49,30 @@ function SeriesFilter({
     if (format.value !== "ANY" && !formatPresence(format.value)) return null;
     const selected = filterMethod === format.value;
     return (
-      <WrapItem>
+      <WrapItem key={format.value}>
         <Button
-          key={format.value}
           onClick={() => filterBy(format.value)}
           variant={selected ? "solid" : "outline"}
         >
           {format.name}
+        </Button>
+      </WrapItem>
+    );
+  });
+
+  const propertyFilterButtons = [
+    { name: "Favorites", value: "favorite" },
+    { name: "Archived", value: "archived" },
+  ].map((property) => {
+    if (!propertyPresence(property.value)) return null;
+    const selected = filterMethod === property.value;
+    return (
+      <WrapItem key={property.value}>
+        <Button
+          onClick={() => filterBy(property.value)}
+          variant={selected ? "solid" : "outline"}
+        >
+          {property.name}
         </Button>
       </WrapItem>
     );
@@ -64,7 +83,10 @@ function SeriesFilter({
       <ButtonGroup colorScheme="orange">{sortButtons}</ButtonGroup>
       {!singleFormat && (
         <ButtonGroup colorScheme="orange">
-          <Wrap>{filterButtons}</Wrap>
+          <Wrap>
+            {formatFilterButtons}
+            {propertyFilterButtons}
+          </Wrap>
         </ButtonGroup>
       )}
     </VStack>

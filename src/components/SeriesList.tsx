@@ -16,7 +16,10 @@ type Props = {
     oldTitle: string,
     title: string,
     format: Format,
-    viewUrl: string | undefined
+    viewUrl: string | undefined,
+    archived: boolean,
+    complete: boolean,
+    favorite: boolean
   ) => void;
   addSession: (
     seriesTitle: string,
@@ -71,8 +74,14 @@ function SeriesList({
   };
 
   const filterItems = (items: Array<SeriesItem>): Array<SeriesItem> => {
-    if (filterMethod === "ANY") return items;
-    return items.filter((item) => item.format === filterMethod);
+    if (filterMethod === "ANY") return items.filter((item) => !item.archived);
+    if (filterMethod === "favorite")
+      return items.filter((item) => !item.archived && item.favorite);
+    if (filterMethod === "archived")
+      return items.filter((item) => item.archived);
+    return items.filter(
+      (item) => item.format === filterMethod && !item.archived
+    );
   };
 
   const filterBy = (method: string): void => {
@@ -111,6 +120,10 @@ function SeriesList({
     return seriesItems.some((item) => item.format === format);
   };
 
+  const propertyPresence = (key: string): boolean => {
+    return seriesItems.some((item) => Boolean((item as any)[key]));
+  };
+
   const singleFormat = seriesItems.every(
     (item) => item.format === seriesItems[0].format
   );
@@ -136,6 +149,7 @@ function SeriesList({
       )}
       <SeriesFilter
         formatPresence={formatPresence}
+        propertyPresence={propertyPresence}
         singleFormat={singleFormat}
         filterMethod={filterMethod}
         filterBy={filterBy}
