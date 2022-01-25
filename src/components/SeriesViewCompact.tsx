@@ -13,11 +13,17 @@ import { FORMAT } from "../constants";
 
 type Props = {
   seriesItem: SeriesItem;
+  restoreSeries: (title: string) => void;
   openSeriesForm: (seriesItem: SeriesItem) => void;
   openSessionForm: (seriesItem: SeriesItem) => void;
 };
 
-function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
+function SeriesView({
+  seriesItem,
+  restoreSeries,
+  openSeriesForm,
+  openSessionForm,
+}: Props) {
   const { title, format, viewUrl } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
@@ -54,22 +60,36 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
           <Box w={10} />
         )}
       </Box>
-      <Button
-        p={0}
-        variant="ghost"
-        borderRadius="0"
-        onClick={() => openSeriesForm(seriesItem)}
-      >
-        <EditIcon />
-      </Button>
-      <Button
-        p={0}
-        variant="ghost"
-        borderRadius="0"
-        onClick={() => openSessionForm(seriesItem)}
-      >
-        <AddIcon />
-      </Button>
+      {seriesItem.archived ? (
+        <Button
+          p={2}
+          fontSize="sm"
+          variant="ghost"
+          borderRadius="lg"
+          onClick={() => restoreSeries(seriesItem.title)}
+        >
+          Restore
+        </Button>
+      ) : (
+        <>
+          <Button
+            p={0}
+            variant="ghost"
+            borderRadius="0"
+            onClick={() => openSeriesForm(seriesItem)}
+          >
+            <EditIcon />
+          </Button>
+          <Button
+            p={0}
+            variant="ghost"
+            borderRadius="0"
+            onClick={() => openSessionForm(seriesItem)}
+          >
+            <AddIcon />
+          </Button>
+        </>
+      )}
     </Flex>
   );
 }

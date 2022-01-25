@@ -203,7 +203,26 @@ function App() {
               viewUrl,
               archived,
               complete,
-              favorite,
+              favorite: archived ? false : favorite,
+              updatedAtMs: Date.now(),
+            }
+          : item
+      )
+    );
+  };
+
+  const restoreSeries = (title: string) => {
+    const seriesToEdit = seriesItems?.some((item) => item.title === title);
+    if (!seriesItems || !seriesToEdit) {
+      throw new Error("Cannot find the series to restore");
+    }
+    setUpdatedAtMs(Date.now());
+    setSeriesItems(
+      seriesItems.map((item) =>
+        item.title === title && item.archived === true
+          ? {
+              ...item,
+              archived: false,
               updatedAtMs: Date.now(),
             }
           : item
@@ -267,6 +286,7 @@ function App() {
                 <SeriesList
                   compactView={compactView}
                   seriesItems={seriesItems}
+                  restoreSeries={restoreSeries}
                   seriesExists={seriesExists}
                   editSeries={editSeries}
                   addSession={addSession}

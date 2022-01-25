@@ -12,6 +12,7 @@ type Props = {
   compactView: boolean;
   seriesItems: Array<SeriesItem>;
   seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
+  restoreSeries: (title: string) => void;
   editSeries: (
     oldTitle: string,
     title: string,
@@ -31,6 +32,7 @@ type Props = {
 function SeriesList({
   compactView,
   seriesItems,
+  restoreSeries,
   seriesExists,
   editSeries,
   addSession,
@@ -76,7 +78,7 @@ function SeriesList({
   const filterItems = (items: Array<SeriesItem>): Array<SeriesItem> => {
     if (filterMethod === "ANY") return items.filter((item) => !item.archived);
     if (filterMethod === "favorite")
-      return items.filter((item) => !item.archived && item.favorite);
+      return items.filter((item) => item.favorite);
     if (filterMethod === "archived")
       return items.filter((item) => item.archived);
     return items.filter(
@@ -163,6 +165,7 @@ function SeriesList({
               <SeriesViewCompact
                 key={item.title}
                 seriesItem={item}
+                restoreSeries={restoreSeries}
                 openSeriesForm={openSeriesFormModal}
                 openSessionForm={openSessionFormModal}
               />
@@ -171,6 +174,7 @@ function SeriesList({
               <SeriesView
                 key={item.title}
                 seriesItem={item}
+                restoreSeries={restoreSeries}
                 openSeriesForm={openSeriesFormModal}
                 openSessionForm={openSessionFormModal}
               />

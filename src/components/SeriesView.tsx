@@ -15,11 +15,17 @@ import { humanDate } from "../helpers";
 
 type Props = {
   seriesItem: SeriesItem;
+  restoreSeries: (title: string) => void;
   openSeriesForm: (seriesItem: SeriesItem) => void;
   openSessionForm: (seriesItem: SeriesItem) => void;
 };
 
-function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
+function SeriesView({
+  seriesItem,
+  restoreSeries,
+  openSeriesForm,
+  openSessionForm,
+}: Props) {
   const { title, format, viewUrl } = seriesItem;
   const lastSession: Session =
     seriesItem.sessions[seriesItem.sessions.length - 1];
@@ -55,30 +61,43 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
           </Text>
         </Box>
         <Flex w="100%">
-          <Button
-            flex="1"
-            p={2}
-            variant="ghost"
-            borderRadius="0"
-            borderBottomLeftRadius="lg"
-            borderTopWidth="1px"
-            borderRightWidth="1px"
-            onClick={() => openSeriesForm(seriesItem)}
-          >
-            <EditIcon />
-          </Button>
-          <Button
-            flex="1"
-            p={2}
-            variant="ghost"
-            borderRadius="0"
-            borderBottomRightRadius="lg"
-            borderTopWidth="1px"
-            disabled={seriesItem.archived || seriesItem.complete}
-            onClick={() => openSessionForm(seriesItem)}
-          >
-            <AddIcon />
-          </Button>
+          {seriesItem.archived ? (
+            <Button
+              flex="1"
+              variant="ghost"
+              borderRadius="0"
+              onClick={() => restoreSeries(seriesItem.title)}
+            >
+              Restore
+            </Button>
+          ) : (
+            <>
+              <Button
+                flex="1"
+                p={2}
+                variant="ghost"
+                borderRadius="0"
+                borderBottomLeftRadius="lg"
+                borderTopWidth="1px"
+                borderRightWidth="1px"
+                onClick={() => openSeriesForm(seriesItem)}
+              >
+                <EditIcon />
+              </Button>
+              <Button
+                flex="1"
+                p={2}
+                variant="ghost"
+                borderRadius="0"
+                borderBottomRightRadius="lg"
+                borderTopWidth="1px"
+                disabled={seriesItem.archived || seriesItem.complete}
+                onClick={() => openSessionForm(seriesItem)}
+              >
+                <AddIcon />
+              </Button>
+            </>
+          )}
         </Flex>
       </VStack>
     </Box>
