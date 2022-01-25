@@ -19,13 +19,13 @@ type Props = {
 function Header({ demoMode }: Props) {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <VStack spacing={0}>
+    <VStack spacing={0} w="100%">
       <Center
-        w="100vw"
+        w="100%"
         p={2}
         bg={colorMode === "light" ? "yellow.200" : "purple.900"}
       >
-        <Flex w="6xl">
+        <Flex w={["100%", "100%", "lg", "xl", "6xl"]}>
           <HStack as="a" href="/" spacing={1}>
             <Icon as={BsBookmarksFill} w={5} h={5} />
             <Text as="b" fontSize="2xl">
