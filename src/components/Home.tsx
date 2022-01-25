@@ -20,6 +20,7 @@ function Home({ setIsLoading }: Props) {
       id: collectionId,
       name: "",
       seriesItems: [],
+      compactView: false,
       updatedAtMs: Date.now(),
     };
     try {

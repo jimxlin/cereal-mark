@@ -20,5 +20,6 @@ export interface Collection {
   id: string;
   name?: string;
   seriesItems: Array<SeriesItem>;
+  compactView: boolean;
   updatedAtMs: number;
 }

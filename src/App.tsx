@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, createContext } from "react";
-import { Box, VStack, useToast } from "@chakra-ui/react";
+import { VStack, useToast } from "@chakra-ui/react";
 import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
@@ -23,6 +23,7 @@ function App() {
   );
   const [updatedAtMs, setUpdatedAtMs] = useState<number | undefined>(undefined);
   const [savedAtMs, setSavedAtMs] = useState<number>(Date.now());
+  const [compactView, setCompactView] = useState(false);
   const [collectionName, setCollectionName] = useState<string | undefined>(
     undefined
   );
@@ -37,9 +38,10 @@ function App() {
             id: collectionId,
             name: collectionName,
             seriesItems,
+            compactView,
             updatedAtMs,
           },
-    [collectionId, collectionName, seriesItems, updatedAtMs]
+    [collectionId, collectionName, seriesItems, compactView, updatedAtMs]
   );
 
   const changesSaved = !updatedAtMs || updatedAtMs < savedAtMs;
@@ -48,6 +50,7 @@ function App() {
     setCollectionId(collection.id);
     setCollectionName(collection.name);
     setSeriesItems(collection.seriesItems);
+    setCompactView(collection.compactView);
     setUpdatedAtMs(collection.updatedAtMs);
   };
 
@@ -246,12 +249,15 @@ function App() {
             {seriesItems ? (
               <>
                 <ManageCollection
+                  compactView={compactView}
+                  setCompactView={setCompactView}
                   addSeries={addSeries}
                   seriesExists={seriesExists}
                   collectionName={collectionName}
                   updateCollectionName={updateCollectionName}
                 />
                 <SeriesList
+                  compactView={compactView}
                   seriesItems={seriesItems}
                   seriesExists={seriesExists}
                   editSeries={editSeries}
