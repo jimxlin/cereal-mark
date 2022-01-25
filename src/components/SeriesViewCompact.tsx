@@ -1,7 +1,6 @@
 import {
   Box,
-  HStack,
-  VStack,
+  Center,
   Flex,
   Spacer,
   Button,
@@ -11,7 +10,6 @@ import {
 import { EditIcon, AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { Session, SeriesItem } from "../types";
 import { FORMAT } from "../constants";
-import { humanDate } from "../helpers";
 
 type Props = {
   seriesItem: SeriesItem;
@@ -26,61 +24,53 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
   const { saga, act } = lastSession;
 
   return (
-    <Box w="100%" borderWidth="1px" borderRadius="lg" boxShadow="md">
-      <VStack>
-        <Box pt={4} pb={2} px={6} w="100%">
-          <Flex>
-            <Text fontSize="xl" isTruncated>
-              {title}
-            </Text>
-            <Spacer />
-            {viewUrl && (
-              <Link pl={2} href={viewUrl} isExternal>
-                <ExternalLinkIcon />
-              </Link>
-            )}
-          </Flex>
-          <HStack>
-            {saga && (
-              <Text>
-                {FORMAT[format].SAGA} {saga}
-              </Text>
-            )}
-            <Text>
-              {FORMAT[format].ACT} {act}
-            </Text>
-          </HStack>
-          <Text as="i" fontSize="xs">
-            {humanDate(lastSession.createdAtMs)}
-          </Text>
-        </Box>
-        <Flex w="100%">
+    <Flex w="100%" borderWidth="1px" borderRadius="lg" boxShadow="md">
+      <Center minW="0">
+        <Text fontSize="sm" pl={3} isTruncated>
+          {title}
+        </Text>
+      </Center>
+      <Spacer />
+      <Center>
+        <Text fontSize="sm" px={1}>
+          {saga && `${FORMAT[format].SAGA[0].toLowerCase()}${saga}`}
+          {FORMAT[format].ACT[0].toLowerCase()}
+          {act}
+        </Text>
+      </Center>
+      <Box display={["none", "none", "inline-flex"]}>
+        {viewUrl ? (
           <Button
-            flex="1"
-            p={2}
+            p={0}
+            as={Link}
             variant="ghost"
             borderRadius="0"
-            borderBottomLeftRadius="lg"
-            borderTopWidth="1px"
-            borderRightWidth="1px"
-            onClick={() => openSeriesForm(seriesItem)}
+            href={viewUrl}
+            isExternal
           >
-            <EditIcon />
+            <ExternalLinkIcon />
           </Button>
-          <Button
-            flex="1"
-            p={2}
-            variant="ghost"
-            borderRadius="0"
-            borderBottomRightRadius="lg"
-            borderTopWidth="1px"
-            onClick={() => openSessionForm(seriesItem)}
-          >
-            <AddIcon />
-          </Button>
-        </Flex>
-      </VStack>
-    </Box>
+        ) : (
+          <Box w={10} />
+        )}
+      </Box>
+      <Button
+        p={0}
+        variant="ghost"
+        borderRadius="0"
+        onClick={() => openSeriesForm(seriesItem)}
+      >
+        <EditIcon />
+      </Button>
+      <Button
+        p={0}
+        variant="ghost"
+        borderRadius="0"
+        onClick={() => openSessionForm(seriesItem)}
+      >
+        <AddIcon />
+      </Button>
+    </Flex>
   );
 }
 
