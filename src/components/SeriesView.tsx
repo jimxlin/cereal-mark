@@ -26,7 +26,7 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
   const { saga, act } = lastSession;
 
   return (
-    <Box w="lg" borderWidth="1px" borderRadius="lg" boxShadow="md">
+    <Box w="100%" borderWidth="1px" borderRadius="lg" boxShadow="md">
       <VStack>
         <Box pt={4} pb={2} px={6} w="100%">
           <Flex>

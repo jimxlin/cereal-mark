@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { VStack, Heading, Text, Button } from "@chakra-ui/react";
+import { VStack, Text, Button } from "@chakra-ui/react";
 import { generateId } from "../helpers";
 import { createCollection } from "../api";
 import { Collection } from "../types";
@@ -41,14 +41,15 @@ function Home({ setIsLoading }: Props) {
   };
 
   return (
-    <VStack spacing={4} mt={4}>
-      <Heading>CerealMark</Heading>
-      <Text>
-        Keep track of series that you are following. Once you've created your
-        page, bookmark it to access it anytime.
+    <VStack spacing={4} px={4}>
+      <Text fontSize="md">
+        CerealMark is a tool to keep track of series that you are following.
+        Once you've created your page, bookmark it to access it anytime.
       </Text>
-      <Button onClick={initializeCollection}>Get Started</Button>
-      <Button as="a" href="/demo">
+      <Button w="sm" colorScheme="blue" onClick={initializeCollection}>
+        Get Started
+      </Button>
+      <Button w="sm" colorScheme="blue" as="a" href="/demo">
         Try the Demo
       </Button>
     </VStack>

@@ -1,4 +1,12 @@
-import { Button, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import {
+  Text,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useColorMode,
+} from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 type Props = {
@@ -12,14 +20,21 @@ function CollectionMenu({
   handleOpenCollectionNameForm,
   handleOpenCreateSeriesForm,
 }: Props) {
+  const { colorMode } = useColorMode();
   return (
     <Menu>
       <MenuButton
         as={Button}
         colorScheme="blue"
         rightIcon={<ChevronDownIcon />}
+        mr={2}
       >
-        {menuName}
+        <Text
+          isTruncated
+          color={colorMode === "light" ? "whiteAlpha.900" : "purple.900"}
+        >
+          {menuName}
+        </Text>
       </MenuButton>
       <MenuList>
         <MenuItem onClick={handleOpenCollectionNameForm}>

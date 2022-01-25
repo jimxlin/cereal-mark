@@ -237,14 +237,14 @@ function App() {
   };
 
   return (
-    <VStack w="100vw" spacing={8}>
+    <VStack w="100%" spacing={[2, 6]}>
       <Header demoMode={demoMode} />
       {isLoading && <LoadingView />}
-      {!isLoading && (
-        <SetErrorContext.Provider value={setError}>
-          <Box minH="80vh">
+      <VStack minH="80vh" w={["100%", "md", "lg"]} px={[2, 2, 0]}>
+        {!isLoading && (
+          <SetErrorContext.Provider value={setError}>
             {seriesItems ? (
-              <VStack w="lg">
+              <>
                 <ManageCollection
                   addSeries={addSeries}
                   seriesExists={seriesExists}
@@ -257,13 +257,13 @@ function App() {
                   editSeries={editSeries}
                   addSession={addSession}
                 />
-              </VStack>
+              </>
             ) : (
               <Home setIsLoading={setIsLoading} />
             )}
-          </Box>
-        </SetErrorContext.Provider>
-      )}
+          </SetErrorContext.Provider>
+        )}
+      </VStack>
       <Footer />
     </VStack>
   );

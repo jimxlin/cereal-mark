@@ -55,7 +55,7 @@ function ManageCollection({
   };
 
   return (
-    <Flex w="lg">
+    <Flex w="100%">
       <CollectionMenu
         menuName={collectionName || "Unnamed Collection"}
         handleOpenCollectionNameForm={onOpenCollectionNameForm}
