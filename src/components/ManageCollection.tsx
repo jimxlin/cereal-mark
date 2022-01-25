@@ -5,8 +5,9 @@ import {
   IconButton,
   useDisclosure,
   useToast,
+  useColorMode,
 } from "@chakra-ui/react";
-import { MoonIcon, LinkIcon } from "@chakra-ui/icons";
+import { MoonIcon, SunIcon, LinkIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
 import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
@@ -42,6 +43,8 @@ function ManageCollection({
     onClose: onCloseCreateSeriesForm,
   } = useDisclosure();
 
+  const { colorMode, toggleColorMode } = useColorMode();
+
   const copiedToast = useToast();
 
   const copyUrl = (): void => {
@@ -69,11 +72,11 @@ function ManageCollection({
           colorScheme="blue"
           icon={<LinkIcon />}
         />
-        {/* TODO: darkmode */}
         <IconButton
-          aria-label="Dark mode"
+          onClick={toggleColorMode}
+          aria-label="Toggle dark mode"
           colorScheme="blue"
-          icon={<MoonIcon />}
+          icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
         />
       </HStack>
       <RenameCollectionView
