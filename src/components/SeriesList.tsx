@@ -4,10 +4,12 @@ import { SeriesItem, Format } from "../types";
 import { SORT } from "../constants";
 import SeriesFilter from "./SeriesFilter";
 import SeriesView from "./SeriesView";
+import SeriesViewCompact from "./SeriesViewCompact";
 import EditSeriesView from "./EditSeriesView";
 import AddSessionView from "./AddSessionView";
 
 type Props = {
+  compactView: boolean;
   seriesItems: Array<SeriesItem>;
   seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
   editSeries: (
@@ -24,6 +26,7 @@ type Props = {
 };
 
 function SeriesList({
+  compactView,
   seriesItems,
   seriesExists,
   editSeries,
@@ -141,14 +144,23 @@ function SeriesList({
         sortBy={sortBy}
       />
       <VStack spacing={4}>
-        {displayItems().map((item) => (
-          <SeriesView
-            key={item.title}
-            seriesItem={item}
-            openSeriesForm={openSeriesFormModal}
-            openSessionForm={openSessionFormModal}
-          />
-        ))}
+        {compactView
+          ? displayItems().map((item) => (
+              <SeriesViewCompact
+                key={item.title}
+                seriesItem={item}
+                openSeriesForm={openSeriesFormModal}
+                openSessionForm={openSessionFormModal}
+              />
+            ))
+          : displayItems().map((item) => (
+              <SeriesView
+                key={item.title}
+                seriesItem={item}
+                openSeriesForm={openSeriesFormModal}
+                openSessionForm={openSessionFormModal}
+              />
+            ))}
       </VStack>
     </VStack>
   );

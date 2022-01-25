@@ -3,6 +3,7 @@ import { Format } from "./types";
 const demoData = {
   id: "123456789abcdef",
   name: "Demo Collection",
+  compactView: false,
   updatedAtMs: 1641101376267,
   seriesItems: [
     {
