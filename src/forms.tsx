@@ -11,6 +11,7 @@ import {
   FormErrorMessage,
   Input,
   Select,
+  Checkbox,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -63,6 +64,18 @@ const MyNumberInput = (props: any): JSX.Element => {
           </NumberIncrementStepper>
         </NumberInputStepper>
       </NumberInput>
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
+    </FormControl>
+  );
+};
+
+const MyCheckboxInput = (props: any): JSX.Element => {
+  const [field, meta] = useField(props);
+  return (
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+      <Checkbox {...field} {...props} isChecked={field.value}>
+        {props.label}
+      </Checkbox>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   );
@@ -255,6 +268,9 @@ export function EditSeriesForm({
         title: seriesItem.title,
         format: seriesItem.format,
         viewUrl: seriesItem.viewUrl,
+        archived: seriesItem.archived,
+        complete: seriesItem.complete,
+        favorite: seriesItem.favorite,
       }}
       validationSchema={Yup.object({
         title: Yup.string().test(
@@ -283,16 +299,6 @@ export function EditSeriesForm({
               <option value="COMIC">{FORMAT.COMIC.NAME}</option>
               <option value="BOOK">{FORMAT.BOOK.NAME}</option>
             </MySelectInput>
-            {/* TODO
-              <MyCheckboxInput
-                label="Archived"
-                name="archived"
-              />
-              <MyCheckboxInput
-                label="Complete"
-                name="complete"
-              />
-             */}
             <MyTextInput
               label="Link"
               name="viewUrl"
@@ -300,6 +306,9 @@ export function EditSeriesForm({
               placeholder="https://example.com"
               autoComplete="off"
             />
+            <MyCheckboxInput label="Favorite" name="favorite" />
+            <MyCheckboxInput label="Archive" name="archived" />
+            <MyCheckboxInput label="Complete" name="complete" />
           </VStack>
           <SubmitButtons
             modalFooter={modalFooter}

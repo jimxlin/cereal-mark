@@ -12,6 +12,8 @@ export interface SeriesItem {
   createdAtMs: number;
   updatedAtMs: number;
   archived: boolean;
+  complete: boolean;
+  favorite: boolean;
   format: Format;
   viewUrl?: string;
 }
