@@ -2,22 +2,28 @@ import {
   Center,
   HStack,
   Text,
-  Button,
+  IconButton,
   LightMode,
   Link,
 } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
 
 function DemoStatus() {
   return (
     <LightMode>
       <Center w="100vw" bg="orange.300" p={2}>
         <HStack>
-          <Text as="b" fontSize="2rem">
+          <Text as="b" fontSize="2xl">
             Demo Mode
           </Text>
-          <Button as={Link} href="/" colorScheme="blue">
-            Exit
-          </Button>
+          <IconButton
+            size="sm"
+            aria-label="Exit demo mode"
+            icon={<CloseIcon />}
+            as={Link}
+            href="/"
+            colorScheme="orange"
+          />
         </HStack>
       </Center>
     </LightMode>

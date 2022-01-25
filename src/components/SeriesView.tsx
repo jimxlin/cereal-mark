@@ -35,12 +35,7 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
             </Text>
             <Spacer />
             {viewUrl && (
-              <Link
-                pl={2}
-                href={viewUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+              <Link pl={2} href={viewUrl} isExternal>
                 <ExternalLinkIcon />
               </Link>
             )}
