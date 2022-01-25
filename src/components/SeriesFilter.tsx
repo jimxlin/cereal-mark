@@ -1,4 +1,4 @@
-import { VStack, Button, ButtonGroup } from "@chakra-ui/react";
+import { VStack, Button, ButtonGroup, Wrap, WrapItem } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { SORT } from "../constants";
 
@@ -47,13 +47,15 @@ function SeriesFilter({
     if (format.value !== "ANY" && !formatPresence(format.value)) return null;
     const selected = filterMethod === format.value;
     return (
-      <Button
-        key={format.value}
-        onClick={() => filterBy(format.value)}
-        variant={selected ? "solid" : "outline"}
-      >
-        {format.name}
-      </Button>
+      <WrapItem>
+        <Button
+          key={format.value}
+          onClick={() => filterBy(format.value)}
+          variant={selected ? "solid" : "outline"}
+        >
+          {format.name}
+        </Button>
+      </WrapItem>
     );
   });
 
@@ -61,7 +63,9 @@ function SeriesFilter({
     <VStack alignItems="left">
       <ButtonGroup colorScheme="orange">{sortButtons}</ButtonGroup>
       {!singleFormat && (
-        <ButtonGroup colorScheme="orange">{filterButtons}</ButtonGroup>
+        <ButtonGroup colorScheme="orange">
+          <Wrap>{filterButtons}</Wrap>
+        </ButtonGroup>
       )}
     </VStack>
   );
