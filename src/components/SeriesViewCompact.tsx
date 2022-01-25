@@ -29,6 +29,16 @@ function SeriesView({
     seriesItem.sessions[seriesItem.sessions.length - 1];
   const { saga, act } = lastSession;
 
+  const progress = seriesItem.complete ? (
+    <Text>Complete</Text>
+  ) : (
+    <Text fontSize="sm" px={1}>
+      {saga && `${FORMAT[format].SAGA[0].toLowerCase()}${saga}`}
+      {FORMAT[format].ACT[0].toLowerCase()}
+      {act}
+    </Text>
+  );
+
   return (
     <Flex w="100%" borderWidth="1px" borderRadius="lg" boxShadow="md">
       <Center minW="0">
@@ -37,13 +47,7 @@ function SeriesView({
         </Text>
       </Center>
       <Spacer />
-      <Center>
-        <Text fontSize="sm" px={1}>
-          {saga && `${FORMAT[format].SAGA[0].toLowerCase()}${saga}`}
-          {FORMAT[format].ACT[0].toLowerCase()}
-          {act}
-        </Text>
-      </Center>
+      <Center>{progress}</Center>
       <Box display={["none", "none", "inline-flex"]}>
         {viewUrl ? (
           <Button
@@ -84,6 +88,7 @@ function SeriesView({
             p={0}
             variant="ghost"
             borderRadius="0"
+            disabled={seriesItem.archived || seriesItem.complete}
             onClick={() => openSessionForm(seriesItem)}
           >
             <AddIcon />

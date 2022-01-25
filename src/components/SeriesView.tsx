@@ -31,6 +31,21 @@ function SeriesView({
     seriesItem.sessions[seriesItem.sessions.length - 1];
   const { saga, act } = lastSession;
 
+  const progress = seriesItem.complete ? (
+    <Text>Complete</Text>
+  ) : (
+    <HStack>
+      {saga && (
+        <Text>
+          {FORMAT[format].SAGA} {saga}
+        </Text>
+      )}
+      <Text>
+        {FORMAT[format].ACT} {act}
+      </Text>
+    </HStack>
+  );
+
   return (
     <Box w="100%" borderWidth="1px" borderRadius="lg" boxShadow="md">
       <VStack>
@@ -46,16 +61,7 @@ function SeriesView({
               </Link>
             )}
           </Flex>
-          <HStack>
-            {saga && (
-              <Text>
-                {FORMAT[format].SAGA} {saga}
-              </Text>
-            )}
-            <Text>
-              {FORMAT[format].ACT} {act}
-            </Text>
-          </HStack>
+          {progress}
           <Text as="i" fontSize="xs">
             {humanDate(lastSession.createdAtMs)}
           </Text>
