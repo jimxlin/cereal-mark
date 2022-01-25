@@ -26,14 +26,7 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
   const { saga, act } = lastSession;
 
   return (
-    <Box
-      w="lg"
-      bg="yellow.50"
-      borderWidth="1px"
-      borderRadius="lg"
-      borderColor="gray.500"
-      boxShadow="md"
-    >
+    <Box w="lg" borderWidth="1px" borderRadius="lg" boxShadow="md">
       <VStack>
         <Box pt={4} pb={2} px={6} w="100%">
           <Flex>
@@ -42,12 +35,7 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
             </Text>
             <Spacer />
             {viewUrl && (
-              <Link
-                pl={2}
-                href={viewUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+              <Link pl={2} href={viewUrl} isExternal>
                 <ExternalLinkIcon />
               </Link>
             )}
@@ -73,7 +61,6 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
             variant="ghost"
             borderRadius="0"
             borderBottomLeftRadius="lg"
-            borderColor="gray.500"
             borderTopWidth="1px"
             borderRightWidth="1px"
             onClick={() => openSeriesForm(seriesItem)}
@@ -86,7 +73,6 @@ function SeriesView({ seriesItem, openSeriesForm, openSessionForm }: Props) {
             variant="ghost"
             borderRadius="0"
             borderBottomRightRadius="lg"
-            borderColor="gray.500"
             borderTopWidth="1px"
             onClick={() => openSessionForm(seriesItem)}
           >

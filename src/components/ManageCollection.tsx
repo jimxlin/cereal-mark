@@ -6,7 +6,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { MoonIcon, LinkIcon } from "@chakra-ui/icons";
+import { LinkIcon } from "@chakra-ui/icons";
 import { Format } from "../types";
 import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
@@ -55,7 +55,7 @@ function ManageCollection({
   };
 
   return (
-    <Flex w="lg" mt={4}>
+    <Flex w="lg">
       <CollectionMenu
         menuName={collectionName || "Unnamed Collection"}
         handleOpenCollectionNameForm={onOpenCollectionNameForm}
@@ -68,12 +68,6 @@ function ManageCollection({
           aria-label="Copy URL"
           colorScheme="blue"
           icon={<LinkIcon />}
-        />
-        {/* TODO: darkmode */}
-        <IconButton
-          aria-label="Dark mode"
-          colorScheme="blue"
-          icon={<MoonIcon />}
         />
       </HStack>
       <RenameCollectionView

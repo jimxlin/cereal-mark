@@ -1,15 +1,16 @@
 import { useState, useEffect, useMemo, createContext } from "react";
-import { VStack, useToast } from "@chakra-ui/react";
+import { Box, VStack, useToast } from "@chakra-ui/react";
 import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
 import demoData from "./demo-data";
-import DemoStatus from "./components/DemoStatus";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Home from "./components/Home";
 import LoadingView from "./components/LoadingView";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export const SetErrorContext = createContext<any>(null);
 
@@ -236,31 +237,34 @@ function App() {
   };
 
   return (
-    <VStack w="100vw" spacing={0}>
-      {demoMode && <DemoStatus />}
+    <VStack w="100vw" spacing={8}>
+      <Header demoMode={demoMode} />
       {isLoading && <LoadingView />}
       {!isLoading && (
         <SetErrorContext.Provider value={setError}>
-          {seriesItems ? (
-            <VStack w="lg">
-              <ManageCollection
-                addSeries={addSeries}
-                seriesExists={seriesExists}
-                collectionName={collectionName}
-                updateCollectionName={updateCollectionName}
-              />
-              <SeriesList
-                seriesItems={seriesItems}
-                seriesExists={seriesExists}
-                editSeries={editSeries}
-                addSession={addSession}
-              />
-            </VStack>
-          ) : (
-            <Home setIsLoading={setIsLoading} />
-          )}
+          <Box minH="80vh">
+            {seriesItems ? (
+              <VStack w="lg">
+                <ManageCollection
+                  addSeries={addSeries}
+                  seriesExists={seriesExists}
+                  collectionName={collectionName}
+                  updateCollectionName={updateCollectionName}
+                />
+                <SeriesList
+                  seriesItems={seriesItems}
+                  seriesExists={seriesExists}
+                  editSeries={editSeries}
+                  addSession={addSession}
+                />
+              </VStack>
+            ) : (
+              <Home setIsLoading={setIsLoading} />
+            )}
+          </Box>
         </SetErrorContext.Provider>
       )}
+      <Footer />
     </VStack>
   );
 }
