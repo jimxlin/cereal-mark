@@ -2,8 +2,8 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import App from "./App";
 
-test("renders header", () => {
+test("renders site name", () => {
   render(<App />);
-  const headerText = screen.getByText(/cerealmark/i);
-  expect(headerText).toBeInTheDocument();
+  const elements = screen.getAllByText(/cerealmark/i);
+  expect(elements[0]).toBeInTheDocument();
 });

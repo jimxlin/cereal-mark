@@ -1,10 +1,12 @@
-import { Center, Image } from "@chakra-ui/react";
+import { Center, Spinner, Portal } from "@chakra-ui/react";
 
 function LoadingView() {
   return (
-    <Center mt={20} w="100vw">
-      <Image src="/spinner.gif" alt="Loading spinner" />
-    </Center>
+    <Portal>
+      <Center w="100%" h={["60vh", "60vh", "30vh"]} position="fixed" top={0}>
+        <Spinner size="xl" />
+      </Center>
+    </Portal>
   );
 }
 
