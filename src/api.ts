@@ -78,6 +78,9 @@ export const backupCollection = (collection: Collection): Collection | null => {
   if (!existingCollection && typeof existingCollection !== "object") {
     throw new Error("Collection does not exist");
   }
-  localStorage.setItem(collection.id, JSON.stringify(collection));
+  localStorage.setItem(
+    `collection-${collection.id}`,
+    JSON.stringify(collection)
+  );
   return JSON.parse(localStorage.getItem(collection.id) || "null");
 };
