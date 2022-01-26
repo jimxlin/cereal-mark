@@ -9,6 +9,7 @@ import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Home from "./components/Home";
 import LoadingView from "./components/LoadingView";
+import InvalidUrlView from "./components/InvalidUrlView";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
@@ -16,6 +17,7 @@ export const SetErrorContext = createContext<any>(null);
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [invalidUrl, setInvalidUrl] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [demoMode, setDemoMode] = useState(false);
   const [collectionId, setCollectionId] = useState<string | undefined>(
@@ -73,7 +75,8 @@ function App() {
         const response = await getCollection(id);
         const collection = response.Item as Collection;
         if (!collection) {
-          setError("Invalid URL");
+          setInvalidUrl(true);
+          setIsLoading(false);
           return;
         }
         hydrateCollection(collection);
@@ -270,8 +273,9 @@ function App() {
     <VStack w="100%" spacing={[2, 6]}>
       <Header demoMode={demoMode} />
       {isLoading && <LoadingView />}
+      {invalidUrl && <InvalidUrlView />}
       <VStack minH="80vh" w={["100%", "md", "lg"]} px={[2, 2, 0]}>
-        {!isLoading && (
+        {!isLoading && !invalidUrl && (
           <SetErrorContext.Provider value={setError}>
             {seriesItems ? (
               <>
