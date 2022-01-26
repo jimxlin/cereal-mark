@@ -1,10 +1,10 @@
 # CerealMark
 
-`(Serial ~> Cereal) + Bookmark = = CerealMark`
+`(Serial ~> Cereal) + Bookmark = CerealMark`
 
 A simple app to keep track of series that you are following like TV shows, comic series, etc. Try the demo [here](https://cereal-mark.vercel.app/demo).
 
-# Build With
+# Built With
 - [Create React App](https://create-react-app.dev/)
 - [Chakra UI](https://chakra-ui.com/)
 - [Formik](https://formik.org/)
