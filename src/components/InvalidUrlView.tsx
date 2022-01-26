@@ -1,10 +1,4 @@
-import { useContext } from "react";
 import { VStack, Text, Button } from "@chakra-ui/react";
-import { generateId } from "../helpers";
-import { createCollection } from "../api";
-import { Collection } from "../types";
-import { DEFAULT_ERROR } from "../constants";
-import { SetErrorContext } from "../App";
 
 function InvalidUrlView() {
   return (
