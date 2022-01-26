@@ -11,7 +11,7 @@ import { CloseIcon } from "@chakra-ui/icons";
 function DemoStatus() {
   return (
     <LightMode>
-      <Center w="100vw" bg="orange.300" p={2}>
+      <Center w="100%" bg="orange.300" p={2}>
         <HStack>
           <Text as="b" fontSize="2xl">
             Demo Mode
