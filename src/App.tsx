@@ -4,6 +4,7 @@ import { Format, Collection, SeriesItem, Session } from "./types";
 import { SAVE_INTERVAL, DEFAULT_ERROR } from "./constants";
 import { getCollection, updateCollection, backupCollection } from "./api";
 import { useInterval } from "./hooks";
+import { toUndefined } from "./helpers";
 import demoData from "./demo-data";
 import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
@@ -50,7 +51,7 @@ function App() {
 
   const hydrateCollection = (collection: Collection): void => {
     setCollectionId(collection.id);
-    setCollectionName(collection.name);
+    setCollectionName(toUndefined(collection.name));
     setSeriesItems(collection.seriesItems);
     setCompactView(collection.compactView);
     setUpdatedAtMs(collection.updatedAtMs);

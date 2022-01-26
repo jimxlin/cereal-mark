@@ -5,6 +5,7 @@
 A simple app to keep track of series that you are following like TV shows, comic series, etc. Try the demo [here](https://cereal-mark.vercel.app/demo).
 
 # Built With
+
 - [Create React App](https://create-react-app.dev/)
 - [Chakra UI](https://chakra-ui.com/)
 - [Formik](https://formik.org/)
@@ -12,8 +13,9 @@ A simple app to keep track of series that you are following like TV shows, comic
 - [DynamoDB](https://aws.amazon.com/dynamodb/)
 
 # TODO
-- [ ] (S) Scroll-to-top button 
-- [ ] (M) Allow deletion of series 
-- [ ] (L) Import/Export series as JSON 
-- [ ] (L) Improve Lighthouse score 
-- [ ] (XL) Progressive Web App 
+
+- [ ] (S) Scroll-to-top button
+- [ ] (M) Allow deletion of series
+- [ ] (L) Import/Export series as JSON
+- [ ] (L) Improve Lighthouse score
+- [ ] (XL) Progressive Web App

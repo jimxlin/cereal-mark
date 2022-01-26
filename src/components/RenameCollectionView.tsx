@@ -22,7 +22,7 @@ function RenameCollectionView({
 
   const onSubmit = (values: FormikValues): void => {
     try {
-      updateCollectionName(values.collectionName);
+      updateCollectionName(values.collectionName.trim());
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : DEFAULT_ERROR);

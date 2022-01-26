@@ -7,6 +7,7 @@ import SeriesView from "./SeriesView";
 import SeriesViewCompact from "./SeriesViewCompact";
 import EditSeriesView from "./EditSeriesView";
 import AddSessionView from "./AddSessionView";
+import EmptySeriesPrompt from "./EmptySeriesPrompt";
 
 type Props = {
   compactView: boolean;
@@ -160,6 +161,7 @@ function SeriesList({
         sortBy={sortBy}
       />
       <VStack spacing={4}>
+        {displayItems().length === 0 && <EmptySeriesPrompt />}
         {compactView
           ? displayItems().map((item) => (
               <SeriesViewCompact

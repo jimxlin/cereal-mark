@@ -140,11 +140,8 @@ export function CollectionNameForm({
   return (
     <Formik
       initialValues={{
-        collectionName: initialName,
+        collectionName: initialName || "",
       }}
-      validationSchema={Yup.object({
-        collectionName: Yup.string().required("Required"),
-      })}
       onSubmit={handleSubmit}
     >
       {({ dirty }: { dirty: boolean }) => (
@@ -152,7 +149,7 @@ export function CollectionNameForm({
           <MyTextInput
             name="collectionName"
             type="text"
-            placeholder="Unnamed Collection"
+            placeholder="Collection"
             autoComplete="off"
           />
           <SubmitButtons
