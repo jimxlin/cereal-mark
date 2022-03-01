@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VStack, useDisclosure } from "@chakra-ui/react";
 import { SeriesItem, Format } from "../types";
 import { SORT } from "../constants";
@@ -130,6 +130,14 @@ function SeriesList({
   const singleFormat = seriesItems.every(
     (item) => item.format === seriesItems[0].format
   );
+
+  const resetFilters = () => {
+    if (displayItems().length > 0) return;
+    setFilterMethod("ANY");
+    setSortMethod(SORT.RECENCY);
+    setSortReverse(false);
+  };
+  useEffect(resetFilters, [seriesItems]);
 
   return (
     <VStack spacing={6} w="100%" alignItems="left">
