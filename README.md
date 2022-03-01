@@ -14,7 +14,6 @@ A simple app to keep track of series that you are following like TV shows, comic
 
 # TODO
 
-- [ ] (S) Scroll-to-top button
 - [ ] (M) Allow deletion of series
 - [ ] (L) Import/Export series as JSON
 - [ ] (L) Improve Lighthouse score
