@@ -10,6 +10,7 @@ import ManageCollection from "./components/ManageCollection";
 import SeriesList from "./components/SeriesList";
 import Home from "./components/Home";
 import LoadingView from "./components/LoadingView";
+import ScrollToTopView from "./components/ScrollToTopView";
 import InvalidUrlView from "./components/InvalidUrlView";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -33,6 +34,7 @@ function App() {
   const [seriesItems, setSeriesItems] = useState<Array<SeriesItem> | undefined>(
     undefined
   );
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const collection = useMemo(
     () =>
       !collectionId || !seriesItems || !updatedAtMs
@@ -128,6 +130,16 @@ function App() {
       isClosable: true,
     });
   }, [error, errorToast]);
+
+  const handleScroll = () => {
+    setShowScrollButton(window.pageYOffset > window.innerHeight);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const updateCollectionName = (name: string): void => {
     setUpdatedAtMs(Date.now());
@@ -275,6 +287,9 @@ function App() {
       <Header demoMode={demoMode} />
       {isLoading && <LoadingView />}
       {invalidUrl && <InvalidUrlView />}
+      {showScrollButton && (
+        <ScrollToTopView scrolltoTop={() => window.scrollTo(0, 0)} />
+      )}
       <VStack minH="80vh" w={["100%", "md", "lg"]} px={[2, 2, 0]}>
         {!isLoading && !invalidUrl && (
           <SetErrorContext.Provider value={setError}>
