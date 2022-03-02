@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VStack, useDisclosure } from "@chakra-ui/react";
 import { SeriesItem, Format } from "../types";
 import { SORT } from "../constants";
@@ -8,12 +8,14 @@ import SeriesViewCompact from "./SeriesViewCompact";
 import EditSeriesView from "./EditSeriesView";
 import AddSessionView from "./AddSessionView";
 import EmptySeriesPrompt from "./EmptySeriesPrompt";
+import ConfirmDeleteSeries from "./ConfirmDeleteSeries";
 
 type Props = {
   compactView: boolean;
   seriesItems: Array<SeriesItem>;
   seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
   restoreSeries: (title: string) => void;
+  deleteSeries: (title: string) => void;
   editSeries: (
     oldTitle: string,
     title: string,
@@ -34,6 +36,7 @@ function SeriesList({
   compactView,
   seriesItems,
   restoreSeries,
+  deleteSeries,
   seriesExists,
   editSeries,
   addSession,
@@ -47,11 +50,19 @@ function SeriesList({
   const [seriesToEdit, setSeriesToEdit] = useState<SeriesItem | undefined>(
     undefined
   );
+  const [seriesToDelete, setSeriesToDelete] = useState<SeriesItem | undefined>(
+    undefined
+  );
 
   const {
     isOpen: isOpenEditSeriesForm,
     onOpen: onOpenEditSeriesFormm,
     onClose: onCloseEditSeriesForm,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDeleteSeriesConfirmation,
+    onOpen: onOpenDeleteSeriesConfirmation,
+    onClose: onCloseDeleteSeriesConfirmation,
   } = useDisclosure();
   const openSeriesFormModal = (seriesItem: SeriesItem): void => {
     setSeriesToEdit(seriesItem);
@@ -131,6 +142,19 @@ function SeriesList({
     (item) => item.format === seriesItems[0].format
   );
 
+  const handleConfirmDeleteSeries = (series: SeriesItem) => {
+    setSeriesToDelete(series);
+    onOpenDeleteSeriesConfirmation();
+  };
+
+  const resetFilters = () => {
+    if (displayItems().length > 0) return;
+    setFilterMethod("ANY");
+    setSortMethod(SORT.RECENCY);
+    setSortReverse(false);
+  };
+  useEffect(resetFilters);
+
   return (
     <VStack spacing={6} w="100%" alignItems="left">
       {seriesToUpdate && (
@@ -145,6 +169,7 @@ function SeriesList({
         <EditSeriesView
           seriesItem={seriesToEdit}
           editSeries={editSeries}
+          deleteSeries={deleteSeries}
           seriesExists={seriesExists}
           isOpen={isOpenEditSeriesForm}
           onClose={closeSeriesFormModal}
@@ -177,11 +202,18 @@ function SeriesList({
                 key={item.title}
                 seriesItem={item}
                 restoreSeries={restoreSeries}
+                deleteSeries={handleConfirmDeleteSeries}
                 openSeriesForm={openSeriesFormModal}
                 openSessionForm={openSessionFormModal}
               />
             ))}
       </VStack>
+      <ConfirmDeleteSeries
+        isOpen={isOpenDeleteSeriesConfirmation}
+        onClose={onCloseDeleteSeriesConfirmation}
+        series={seriesToDelete}
+        deleteSeries={deleteSeries}
+      />
     </VStack>
   );
 }
