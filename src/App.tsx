@@ -246,6 +246,15 @@ function App() {
     );
   };
 
+  const deleteSeries = (title: string) => {
+    const seriesToEdit = seriesItems?.some((item) => item.title === title);
+    if (!seriesItems || !seriesToEdit) {
+      throw new Error("Cannot find the series to delete");
+    }
+    setUpdatedAtMs(Date.now());
+    setSeriesItems(seriesItems.filter((item) => item.title !== title));
+  };
+
   const addSession = (
     seriesTitle: string,
     act: number,
@@ -307,6 +316,7 @@ function App() {
                   compactView={compactView}
                   seriesItems={seriesItems}
                   restoreSeries={restoreSeries}
+                  deleteSeries={deleteSeries}
                   seriesExists={seriesExists}
                   editSeries={editSeries}
                   addSession={addSession}

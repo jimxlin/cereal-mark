@@ -16,6 +16,7 @@ import { humanDate } from "../helpers";
 type Props = {
   seriesItem: SeriesItem;
   restoreSeries: (title: string) => void;
+  deleteSeries: (seriesItem: SeriesItem) => void;
   openSeriesForm: (seriesItem: SeriesItem) => void;
   openSessionForm: (seriesItem: SeriesItem) => void;
 };
@@ -23,6 +24,7 @@ type Props = {
 function SeriesView({
   seriesItem,
   restoreSeries,
+  deleteSeries,
   openSeriesForm,
   openSessionForm,
 }: Props) {
@@ -68,14 +70,24 @@ function SeriesView({
         </Box>
         <Flex w="100%">
           {seriesItem.archived ? (
-            <Button
-              flex="1"
-              variant="ghost"
-              borderRadius="0"
-              onClick={() => restoreSeries(seriesItem.title)}
-            >
-              Restore
-            </Button>
+            <>
+              <Button
+                flex="1"
+                variant="ghost"
+                borderRadius="0"
+                onClick={() => restoreSeries(seriesItem.title)}
+              >
+                Restore
+              </Button>
+              <Button
+                flex="1"
+                variant="ghost"
+                borderRadius="0"
+                onClick={() => deleteSeries(seriesItem)}
+              >
+                Delete
+              </Button>
+            </>
           ) : (
             <>
               <Button
