@@ -73,16 +73,23 @@ function SeriesView({
             <>
               <Button
                 flex="1"
+                p={2}
                 variant="ghost"
                 borderRadius="0"
+                borderBottomLeftRadius="lg"
+                borderTopWidth="1px"
+                borderRightWidth="1px"
                 onClick={() => restoreSeries(seriesItem.title)}
               >
                 Restore
               </Button>
               <Button
                 flex="1"
+                p={2}
                 variant="ghost"
                 borderRadius="0"
+                borderBottomRightRadius="lg"
+                borderTopWidth="1px"
                 onClick={() => deleteSeries(seriesItem)}
               >
                 Delete

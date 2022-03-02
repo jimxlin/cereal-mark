@@ -35,7 +35,7 @@ function ConfirmDeleteSeries({ series, deleteSeries, isOpen, onClose }: Props) {
           </AlertDialogHeader>
           <AlertDialogBody>
             {series
-              ? `Are you sure you want to delete ${series.title}? `
+              ? `Are you sure you want to delete '${series.title}'? `
               : "Are you sure? "}
             You can't undo this action afterwards.
           </AlertDialogBody>

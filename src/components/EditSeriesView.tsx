@@ -20,6 +20,7 @@ type Props = {
     complete: boolean,
     favorite: boolean
   ) => void;
+  deleteSeries: (title: string) => void;
   seriesExists: (title: string | undefined, ownTitle?: string) => boolean;
 };
 
@@ -28,6 +29,7 @@ function EditSeriesView({
   isOpen,
   onClose,
   editSeries,
+  deleteSeries,
   seriesExists,
 }: Props) {
   const setError = useContext(SetErrorContext);
@@ -35,15 +37,19 @@ function EditSeriesView({
   const onSubmit = (values: FormikValues): void => {
     setError(undefined);
     try {
-      editSeries(
-        seriesItem.title,
-        values.title,
-        values.format,
-        toUndefined(values.viewUrl),
-        values.archived,
-        values.complete,
-        values.favorite
-      );
+      if (values.willDelete) {
+        deleteSeries(seriesItem.title);
+      } else {
+        editSeries(
+          seriesItem.title,
+          values.title,
+          values.format,
+          toUndefined(values.viewUrl),
+          values.archived,
+          values.complete,
+          values.favorite
+        );
+      }
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : DEFAULT_ERROR);

@@ -153,7 +153,7 @@ function SeriesList({
     setSortMethod(SORT.RECENCY);
     setSortReverse(false);
   };
-  useEffect(resetFilters, [seriesItems]);
+  useEffect(resetFilters);
 
   return (
     <VStack spacing={6} w="100%" alignItems="left">
@@ -169,6 +169,7 @@ function SeriesList({
         <EditSeriesView
           seriesItem={seriesToEdit}
           editSeries={editSeries}
+          deleteSeries={deleteSeries}
           seriesExists={seriesExists}
           isOpen={isOpenEditSeriesForm}
           onClose={closeSeriesFormModal}

@@ -95,11 +95,15 @@ const MySelectInput = (props: any): JSX.Element => {
 type SubmitButtonsProps = {
   modalFooter: boolean;
   disableSave: boolean;
+  customSubmit?: string;
+  customButtonColor?: string;
   handleCancel: () => void;
 };
 const SubmitButtons = ({
   modalFooter,
   disableSave,
+  customSubmit,
+  customButtonColor,
   handleCancel,
 }: SubmitButtonsProps) => {
   return modalFooter ? (
@@ -109,8 +113,12 @@ const SubmitButtons = ({
       <Button mr={2} onClick={handleCancel}>
         Cancel
       </Button>
-      <Button type="submit" disabled={disableSave}>
-        Save
+      <Button
+        type="submit"
+        disabled={disableSave}
+        colorScheme={customButtonColor || "blue"}
+      >
+        {customSubmit || "Save"}
       </Button>
     </Flex>
   ) : (
@@ -118,8 +126,12 @@ const SubmitButtons = ({
       <Button mr={2} onClick={handleCancel}>
         Cancel
       </Button>
-      <Button type="submit" disabled={disableSave}>
-        Save
+      <Button
+        type="submit"
+        disabled={disableSave}
+        colorScheme={customButtonColor || "blue"}
+      >
+        {customSubmit || "Save"}
       </Button>
     </HStack>
   );
@@ -268,6 +280,7 @@ export function EditSeriesForm({
         archived: seriesItem.archived,
         complete: seriesItem.complete,
         favorite: seriesItem.favorite,
+        willDelete: false,
       }}
       validationSchema={Yup.object({
         title: Yup.string().test(
@@ -282,7 +295,13 @@ export function EditSeriesForm({
       })}
       onSubmit={handleSubmit}
     >
-      {({ dirty }: { dirty: boolean }) => (
+      {({
+        values: { willDelete },
+        dirty,
+      }: {
+        values: { willDelete: boolean };
+        dirty: boolean;
+      }) => (
         <Form>
           <VStack spacing={4}>
             <MyTextInput
@@ -290,8 +309,9 @@ export function EditSeriesForm({
               name="title"
               type="text"
               autoComplete="off"
+              disabled={willDelete}
             />
-            <MySelectInput label="Format" name="format">
+            <MySelectInput label="Format" name="format" disabled={willDelete}>
               <option value="SHOW">{FORMAT.SHOW.NAME}</option>
               <option value="COMIC">{FORMAT.COMIC.NAME}</option>
               <option value="BOOK">{FORMAT.BOOK.NAME}</option>
@@ -302,15 +322,31 @@ export function EditSeriesForm({
               type="url"
               placeholder="https://example.com"
               autoComplete="off"
+              disabled={willDelete}
             />
-            <MyCheckboxInput label="Favorite" name="favorite" />
-            <MyCheckboxInput label="Archive" name="archived" />
-            <MyCheckboxInput label="Complete" name="complete" />
+            <MyCheckboxInput
+              label="Favorite"
+              name="favorite"
+              isDisabled={willDelete}
+            />
+            <MyCheckboxInput
+              label="Archive"
+              name="archived"
+              isDisabled={willDelete}
+            />
+            <MyCheckboxInput
+              label="Complete"
+              name="complete"
+              isDisabled={willDelete}
+            />
+            <MyCheckboxInput label="Delete" name="willDelete" />
           </VStack>
           <SubmitButtons
             modalFooter={modalFooter}
             disableSave={!dirty}
             handleCancel={handleCancel}
+            customButtonColor={willDelete ? "red" : undefined}
+            customSubmit={willDelete ? "Delete" : undefined}
           />
         </Form>
       )}
