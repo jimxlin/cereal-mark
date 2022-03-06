@@ -84,3 +84,17 @@ export const backupCollection = (collection: Collection): Collection | null => {
   );
   return JSON.parse(localStorage.getItem(collection.id) || "null");
 };
+
+export const exportCollection = (collectionId: string): void => {
+  const jsonString = localStorage.getItem(`collection-${collectionId}`);
+  if (!jsonString) throw new Error("Collection does not exist");
+  const blob = new Blob([jsonString], { type: "application/json" });
+  const objectUrl = URL.createObjectURL(blob);
+  const exportLink = document.createElement("a");
+  exportLink.href = objectUrl;
+  exportLink.download = "cereal-mark.json";
+  document.body.appendChild(exportLink);
+  exportLink.click();
+  URL.revokeObjectURL(objectUrl);
+  document.body.removeChild(exportLink);
+};

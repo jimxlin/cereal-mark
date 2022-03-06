@@ -14,11 +14,13 @@ import { Format } from "../types";
 import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
 import RenameCollectionView from "./RenameCollectionView";
+import ExportCollectionView from "./ExportCollectionView";
 
 type Props = {
   compactView: boolean;
   setCompactView: (compactView: boolean) => void;
   collectionName: string | undefined;
+  collectionId: string | undefined;
   updateCollectionName: (name: string) => void;
   addSeries: (
     title: string,
@@ -35,6 +37,7 @@ function ManageCollection({
   setCompactView,
   addSeries,
   collectionName,
+  collectionId,
   updateCollectionName,
   seriesExists,
 }: Props) {
@@ -47,6 +50,11 @@ function ManageCollection({
     isOpen: isOpenCreateSeriesForm,
     onOpen: onOpenCreateSeriesForm,
     onClose: onCloseCreateSeriesForm,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenExportCollection,
+    onOpen: onOpenExportCollection,
+    onClose: onCloseExportCollection,
   } = useDisclosure();
 
   const copiedToast = useToast();
@@ -67,6 +75,7 @@ function ManageCollection({
         menuName={collectionName || "Collection"}
         handleOpenCollectionNameForm={onOpenCollectionNameForm}
         handleOpenCreateSeriesForm={onOpenCreateSeriesForm}
+        handleOpenExportCollection={onOpenExportCollection}
       />
       <Spacer />
       <HStack>
@@ -98,6 +107,11 @@ function ManageCollection({
         onClose={onCloseCreateSeriesForm}
         addSeries={addSeries}
         seriesExists={seriesExists}
+      />
+      <ExportCollectionView
+        isOpen={isOpenExportCollection}
+        onClose={onCloseExportCollection}
+        collectionId={collectionId}
       />
     </Flex>
   );

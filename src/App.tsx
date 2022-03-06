@@ -310,6 +310,7 @@ function App() {
                   addSeries={addSeries}
                   seriesExists={seriesExists}
                   collectionName={collectionName}
+                  collectionId={collectionId}
                   updateCollectionName={updateCollectionName}
                 />
                 <SeriesList
