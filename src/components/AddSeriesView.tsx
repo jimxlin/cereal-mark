@@ -29,8 +29,8 @@ function AddSeriesView({ isOpen, onClose, addSeries, seriesExists }: Props) {
       addSeries(
         values.title,
         values.format,
-        toUndefined(values.act),
-        values.saga,
+        Number(values.act),
+        Number(toUndefined(values.saga)) || undefined,
         toUndefined(values.viewUrl)
       );
       onClose();

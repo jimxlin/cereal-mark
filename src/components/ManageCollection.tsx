@@ -14,6 +14,7 @@ import { Format } from "../types";
 import CollectionMenu from "./CollectionMenu";
 import AddSeriesView from "./AddSeriesView";
 import RenameCollectionView from "./RenameCollectionView";
+import ImportCollectionView from "./ImportCollectionView";
 import ExportCollectionView from "./ExportCollectionView";
 
 type Props = {
@@ -56,6 +57,11 @@ function ManageCollection({
     onOpen: onOpenExportCollection,
     onClose: onCloseExportCollection,
   } = useDisclosure();
+  const {
+    isOpen: isOpenImportCollection,
+    onOpen: onOpenImportCollection,
+    onClose: onCloseImportCollection,
+  } = useDisclosure();
 
   const copiedToast = useToast();
 
@@ -76,6 +82,7 @@ function ManageCollection({
         handleOpenCollectionNameForm={onOpenCollectionNameForm}
         handleOpenCreateSeriesForm={onOpenCreateSeriesForm}
         handleOpenExportCollection={onOpenExportCollection}
+        handleOpenImportCollection={onOpenImportCollection}
       />
       <Spacer />
       <HStack>
@@ -107,6 +114,11 @@ function ManageCollection({
         onClose={onCloseCreateSeriesForm}
         addSeries={addSeries}
         seriesExists={seriesExists}
+      />
+      <ImportCollectionView
+        isOpen={isOpenImportCollection}
+        onClose={onCloseImportCollection}
+        collectionId={collectionId}
       />
       <ExportCollectionView
         isOpen={isOpenExportCollection}

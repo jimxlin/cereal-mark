@@ -7,7 +7,7 @@ import {
   PutCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { Collection } from "./types";
+import { Collection, SeriesItem } from "./types";
 
 /************
  * DynamoDB *
@@ -83,6 +83,16 @@ export const backupCollection = (collection: Collection): Collection | null => {
     JSON.stringify(collection)
   );
   return JSON.parse(localStorage.getItem(collection.id) || "null");
+};
+
+export const importCollection = (
+  collectionId: string,
+  uploadedCollection: Collection
+): void => {
+  const existingCollection = localStorage.getItem(collectionId);
+  uploadedCollection.seriesItems.forEach((item: SeriesItem) => {
+    // TODO implement
+  });
 };
 
 export const exportCollection = (collectionId: string): void => {

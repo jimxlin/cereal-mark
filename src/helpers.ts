@@ -1,4 +1,6 @@
 import { sha256 } from "hash-wasm";
+import typesTi from "./types-ti";
+import { createCheckers } from "ts-interface-checker";
 
 export const generateId = async (): Promise<string> => {
   let uniqueId: string = Date.now().toString();
@@ -23,3 +25,19 @@ const DATE_OPTIONS: any = {
 
 export const humanDate = (ms: number): string =>
   new Date(ms).toLocaleString(DATE_LOCALE, DATE_OPTIONS);
+
+export const validateCollection = (obj: any): void => {
+  const { Collection } = createCheckers(typesTi);
+  Collection.check(obj);
+};
+
+export function readTextFileAsync(file: File) {
+  return new Promise((resolve, reject) => {
+    let fileReader = new FileReader();
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+    fileReader.onerror = reject;
+    fileReader.readAsText(file, "UTF-8");
+  });
+}

@@ -14,6 +14,7 @@ type Props = {
   handleOpenCollectionNameForm: () => void;
   handleOpenCreateSeriesForm: () => void;
   handleOpenExportCollection: () => void;
+  handleOpenImportCollection: () => void;
 };
 
 function CollectionMenu({
@@ -21,6 +22,7 @@ function CollectionMenu({
   handleOpenCollectionNameForm,
   handleOpenCreateSeriesForm,
   handleOpenExportCollection,
+  handleOpenImportCollection,
 }: Props) {
   const { colorMode } = useColorMode();
   return (
@@ -39,12 +41,15 @@ function CollectionMenu({
         </Text>
       </MenuButton>
       <MenuList>
+        <MenuItem onClick={handleOpenCreateSeriesForm}>Add Series</MenuItem>
         <MenuItem onClick={handleOpenCollectionNameForm}>
           Rename Collection
         </MenuItem>
-        <MenuItem onClick={handleOpenCreateSeriesForm}>Add Series</MenuItem>
         <MenuItem onClick={handleOpenExportCollection}>
           Export Collection
+        </MenuItem>
+        <MenuItem onClick={handleOpenImportCollection}>
+          Import Collection
         </MenuItem>
       </MenuList>
     </Menu>
